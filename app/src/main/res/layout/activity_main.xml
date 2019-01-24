@@ -31,4 +31,41 @@
         android:onClick="onButtonClick"
         android:text="@string/hello" />
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerInParent="true"
+        android:orientation="vertical">
+
+        <Button
+            android:id="@+id/buttonCat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:onClick="onButtonClick"
+            android:text="@string/cat" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/buttonDog"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:onClick="onButtonClick"
+                android:text="@string/dog" />
+
+            <Button
+                android:id="@+id/buttonCthulhu"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:onClick="onButtonClick"
+                android:text="@string/cthulhu" />
+
+        </LinearLayout>
+    </LinearLayout>
 </RelativeLayout>
