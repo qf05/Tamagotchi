@@ -3,6 +3,8 @@ package ru.levspb666.tamagotchi;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 
@@ -14,6 +16,8 @@ public class MainActivity extends AppCompatActivity {
     Button cat;
     Button dog;
     Button cthulhu;
+    public static boolean SOUND_OFF = false;
+    private MenuItem soundCheckbox;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -49,5 +53,35 @@ public class MainActivity extends AppCompatActivity {
     public void onButtonClick(View view) {
         Intent intent = new Intent(MainActivity.this, OtherActivity.class);
         startActivity(intent);
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        soundCheckbox = menu.findItem(R.id.offSound);
+        soundCheckbox.setChecked(!SOUND_OFF);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.petSettings:
+
+                return true;
+            case R.id.alarmSettings:
+
+                return true;
+            case R.id.showHistory:
+
+                return true;
+            case R.id.offSound:
+                SOUND_OFF = !SOUND_OFF;
+                soundCheckbox.setChecked(!SOUND_OFF);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
     }
 }

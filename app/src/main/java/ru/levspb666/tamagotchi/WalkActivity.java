@@ -20,6 +20,7 @@ import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static android.view.View.TRANSLATION_X;
 import static android.view.View.TRANSLATION_Y;
+import static ru.levspb666.tamagotchi.MainActivity.SOUND_OFF;
 
 public class WalkActivity extends AppCompatActivity {
     private int height;
@@ -156,17 +157,18 @@ public class WalkActivity extends AppCompatActivity {
     };
 
     private void playSound(final int resource) {
-        if (mp != null) {
-            mp.stop();
-            mp.release();
-        }
-        new Thread() {
-            public void run() {
-                mp = MediaPlayer.create(WalkActivity.this, resource);
-                mp.start();
+        if (!SOUND_OFF) {
+            if (mp != null) {
+                mp.stop();
+                mp.release();
             }
-        }.start();
-
+            new Thread() {
+                public void run() {
+                    mp = MediaPlayer.create(WalkActivity.this, resource);
+                    mp.start();
+                }
+            }.start();
+        }
     }
 
     public void goHome(View view) {
