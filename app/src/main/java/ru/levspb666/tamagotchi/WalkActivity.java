@@ -191,4 +191,9 @@ public class WalkActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onUserLeaveHint() {
+        super.onUserLeaveHint();
+        finish();
+    }
 }
