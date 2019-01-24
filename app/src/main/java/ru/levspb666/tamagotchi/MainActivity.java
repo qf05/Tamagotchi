@@ -6,6 +6,10 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
+import ru.levspb666.tamagotchi.enums.PetsType;
+
+import static ru.levspb666.tamagotchi.WalkActivity.PET;
+
 public class MainActivity extends AppCompatActivity {
     Button cat;
     Button dog;
@@ -28,12 +32,17 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             switch (v.getId()) {
                 case R.id.buttonCat:
+                    PET = PetsType.CAT;
                     break;
                 case R.id.buttonDog:
+                    PET = PetsType.DOG;
                     break;
                 case R.id.buttonCthulhu:
+                    PET = PetsType.CTHULHU;
                     break;
             }
+            Intent intent = new Intent(MainActivity.this, WalkActivity.class);
+            startActivity(intent);
         }
     };
 
