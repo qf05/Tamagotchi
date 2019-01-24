@@ -22,4 +22,13 @@
         android:textSize="50sp"
         android:textStyle="bold" />
 
+    <Button
+        android:id="@+id/button"
+        android:layout_alignParentBottom="true"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="20dp"
+        android:onClick="onButtonClick"
+        android:text="@string/hello" />
+
 </RelativeLayout>
