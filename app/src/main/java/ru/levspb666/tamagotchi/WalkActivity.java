@@ -8,6 +8,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.animation.Animation;
+import android.view.animation.AnimationSet;
+import android.view.animation.RotateAnimation;
 import android.view.animation.TranslateAnimation;
 import android.widget.ImageView;
 
@@ -21,6 +23,8 @@ public class WalkActivity extends AppCompatActivity {
     private int thisY;
     private int nextX;
     private int nextY;
+    private float nextAngle;
+    private float angle;
     private ImageView petView;
     public static PetsType PET;
 
@@ -62,6 +66,7 @@ public class WalkActivity extends AppCompatActivity {
                 width = size.x - petView.getWidth();
                 thisX = (int) petView.getX() + 300;
                 thisY = (int) petView.getY() + 300;
+                petView.setRotation(-90);
                 startAnimation();
             }
         });
@@ -76,10 +81,22 @@ public class WalkActivity extends AppCompatActivity {
             nextY = thisY + (int) (Math.random() * height - height / 1.5);
         } while (nextY < 0 || nextY > height);
 
+
+        nextAngle = (float) Math.toDegrees(Math.atan2(thisY - nextY, thisX - nextX));
+        int rotationDuration = (int) (Math.random() * 500 + 300);
+
+        final AnimationSet animationSet = new AnimationSet(true);
+        RotateAnimation rotateAnimation = new RotateAnimation(angle, nextAngle, 1, 0.5f, 1, 0.5f);
+        rotateAnimation.setDuration(rotationDuration);
+
         Animation translateAnimation = new TranslateAnimation(thisX, nextX, thisY, nextY);
         translateAnimation.setDuration((long) (Math.random() * 1000 + 100));
-        translateAnimation.setAnimationListener(animationListener);
-        petView.startAnimation(translateAnimation);
+        translateAnimation.setStartOffset((long) (rotationDuration - Math.random() * 300));
+
+        animationSet.addAnimation(rotateAnimation);
+        animationSet.addAnimation(translateAnimation);
+        animationSet.setAnimationListener(animationListener);
+        petView.startAnimation(animationSet);
     }
 
     Animation.AnimationListener animationListener = new Animation.AnimationListener() {
@@ -92,6 +109,7 @@ public class WalkActivity extends AppCompatActivity {
         public void onAnimationEnd(Animation animation) {
             thisX = nextX;
             thisY = nextY;
+            angle = nextAngle;
             startAnimation();
         }
 
