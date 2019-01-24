@@ -20,6 +20,7 @@ import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static android.view.View.TRANSLATION_X;
 import static android.view.View.TRANSLATION_Y;
+import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
 import static ru.levspb666.tamagotchi.MainActivity.SOUND_OFF;
 
 public class WalkActivity extends AppCompatActivity {
@@ -30,7 +31,6 @@ public class WalkActivity extends AppCompatActivity {
     private int nextX;
     private int nextY;
     private ImageView petView;
-    public static PetsType PET;
     private MediaPlayer mp;
     private AnimatorSet animatorSet;
 
@@ -40,7 +40,7 @@ public class WalkActivity extends AppCompatActivity {
         setContentView(R.layout.walk_activity);
 
         petView = findViewById(R.id.petWalk);
-        switch (PET) {
+        switch (PetsType.valueOf(SELECTED_PET.getType())) {
             case CAT:
                 petView.setImageResource(R.drawable.cat);
                 break;
@@ -96,7 +96,6 @@ public class WalkActivity extends AppCompatActivity {
         float nextAngle = (float) Math.toDegrees(Math.atan2(thisY - nextY, thisX - nextX));
         int rotationDuration = (int) (Math.random() * 500 + 100);
         int time = (int) (Math.random() * 1000 + 100);
-        Log.i("angel", nextAngle + "");
 
         // https://stackoverflow.com/questions/28352352/change-multiple-properties-with-single-objectanimator
         PropertyValuesHolder pvhX = PropertyValuesHolder.ofFloat(TRANSLATION_X, nextX);
@@ -142,7 +141,7 @@ public class WalkActivity extends AppCompatActivity {
         @Override
         public void onClick(View v) {
             Log.i("WALK", "Click on pet");
-            switch (PET) {
+            switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
                     playSound(R.raw.cat);
                     break;

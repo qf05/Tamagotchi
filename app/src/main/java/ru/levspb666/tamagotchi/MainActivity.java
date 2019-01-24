@@ -1,54 +1,57 @@
 package ru.levspb666.tamagotchi;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Button;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import ru.levspb666.tamagotchi.enums.PetsType;
-
-import static ru.levspb666.tamagotchi.WalkActivity.PET;
+import ru.levspb666.tamagotchi.model.Pet;
 
 public class MainActivity extends AppCompatActivity {
-    Button cat;
-    Button dog;
-    Button cthulhu;
+
+    public static Pet SELECTED_PET;
     public static boolean SOUND_OFF = false;
     private MenuItem soundCheckbox;
+    private TextView petName;
+    private ImageView petView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        cat = findViewById(R.id.buttonCat);
-        dog = findViewById(R.id.buttonDog);
-        cthulhu = findViewById(R.id.buttonCthulhu);
-        cat.setOnClickListener(buttonListener);
-        dog.setOnClickListener(buttonListener);
-        cthulhu.setOnClickListener(buttonListener);
+        petName = findViewById(R.id.petName);
+        petView = findViewById(R.id.petView);
+        setViewPet();
     }
 
-    View.OnClickListener buttonListener = new View.OnClickListener() {
-        @Override
-        public void onClick(View v) {
-            switch (v.getId()) {
-                case R.id.buttonCat:
-                    PET = PetsType.CAT;
+    private void setViewPet() {
+        if (SELECTED_PET != null) {
+            petName.setText(SELECTED_PET.getName());
+            switch (PetsType.valueOf(SELECTED_PET.getType())) {
+                case CAT:
+                    petView.setImageResource(R.drawable.cat_small);
                     break;
-                case R.id.buttonDog:
-                    PET = PetsType.DOG;
+                case DOG:
+                    petView.setImageResource(R.drawable.dog_small);
                     break;
-                case R.id.buttonCthulhu:
-                    PET = PetsType.CTHULHU;
+                case CTHULHU:
+                    petView.setImageResource(R.drawable.cthulhu_small);
                     break;
             }
+        }
+    }
+
+    public void goWalk(View view) {
+        if (SELECTED_PET != null) {
             Intent intent = new Intent(MainActivity.this, WalkActivity.class);
             startActivity(intent);
         }
-    };
+    }
 
     public void onButtonClick(View view) {
         Intent intent = new Intent(MainActivity.this, OtherActivity.class);

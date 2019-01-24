@@ -12,6 +12,12 @@
     <string name="change_pet">Сменить питомца</string>
     <string name="change_name">Переименовать питомца</string>
     <string name="delete_pet">Удаление питомцев</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="name">Name</string>
+    <string name="pets_input">Выберите питомца:</string>
+    <string name="create_pet">Создание питомца</string>
+    <string name="input_name">Введите имя:</string>
 
 
     <string-array name="pets">

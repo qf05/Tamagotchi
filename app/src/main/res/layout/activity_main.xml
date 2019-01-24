@@ -11,7 +11,14 @@
         android:scaleType="centerCrop"
         android:src="@drawable/android_background" />
 
+    <ImageView
+        android:id="@+id/petView"
+        android:layout_width="300dp"
+        android:layout_height="300dp"
+        android:layout_centerInParent="true"/>
+
     <TextView
+        android:id="@+id/petName"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
@@ -31,41 +38,13 @@
         android:onClick="onButtonClick"
         android:text="@string/hello" />
 
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
-        android:orientation="vertical">
-
-        <Button
-            android:id="@+id/buttonCat"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:onClick="onButtonClick"
-            android:text="@string/cat" />
-
-        <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-            <Button
-                android:id="@+id/buttonDog"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:onClick="onButtonClick"
-                android:text="@string/dog" />
-
-            <Button
-                android:id="@+id/buttonCthulhu"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="20dp"
-                android:onClick="onButtonClick"
-                android:text="@string/cthulhu" />
-
-        </LinearLayout>
-    </LinearLayout>
+    <Button
+        android:id="@+id/goWalk"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
+        android:layout_margin="10dp"
+        android:onClick="goWalk"
+        android:background="@drawable/walk" />
 </RelativeLayout>
