@@ -8,4 +8,15 @@
     <string name="notification">Уведомления</string>
     <string name="history">История</string>
     <string name="sound">Звук</string>
+    <string name="create_new_pet">Создать питомца</string>
+    <string name="change_pet">Сменить питомца</string>
+    <string name="change_name">Переименовать питомца</string>
+    <string name="delete_pet">Удаление питомцев</string>
+
+
+    <string-array name="pets">
+        <item>Кошка</item>
+        <item>Собака</item>
+        <item>Ктулху</item>
+    </string-array>
 </resources>

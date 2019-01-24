@@ -21,6 +21,7 @@
         </activity>
         <activity android:name=".OtherActivity" />
         <activity android:name=".WalkActivity" />
+        <activity android:name=".SettingsActivity" />
     </application>
 
 </manifest>
