@@ -11,22 +11,26 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 
+import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
+import static ru.levspb666.tamagotchi.MainActivity.PETS;
 import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
 
 public class SettingsActivity extends AppCompatActivity {
     private Spinner spinnerCreate;
     private EditText inputName;
     private AlertDialog dialog;
+    private DataBase db;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
+        db = DataBase.getAppDatabase(getApplicationContext());
     }
 
     public void createPet(View view) {
@@ -54,7 +58,9 @@ public class SettingsActivity extends AppCompatActivity {
                 PetsType[] petsTypes = PetsType.values();
                 PetsType petsType = petsTypes[spinnerCreate.getSelectedItemPosition()];
                 Log.i("SELECTED_PET", petsType.toString() + "   " + name);
-                SELECTED_PET = new Pet(name, petsType);
+                long id = db.petDao().insert(new Pet(name, petsType));
+                PETS = db.petDao().getAll();
+                SELECTED_PET = db.petDao().findById(id);
                 dialog.cancel();
                 finish();
             }
