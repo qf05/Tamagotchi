@@ -1,16 +1,35 @@
 package ru.levspb666.tamagotchi.model;
 
+import android.arch.persistence.room.ColumnInfo;
+import android.arch.persistence.room.Entity;
+import android.arch.persistence.room.ForeignKey;
+import android.arch.persistence.room.Ignore;
+import android.arch.persistence.room.Index;
+import android.arch.persistence.room.PrimaryKey;
+
 import java.util.Objects;
 
+// https://habr.com/post/336196/
+@Entity(foreignKeys = @ForeignKey(
+        onDelete = ForeignKey.CASCADE,
+        entity = Pet.class,
+        parentColumns = "id",
+        childColumns = "pet_id"),
+        indices = {@Index("pet_id")})
 public class History {
+
+    @PrimaryKey(autoGenerate = true)
     private long id;
     private long date;
+    @ColumnInfo(name = "action_type")
     private String action;
+    @ColumnInfo(name = "pet_id")
     private long petId;
 
     public History() {
     }
 
+    @Ignore
     public History(long date, String type, long petId) {
         this.date = date;
         this.action = type;

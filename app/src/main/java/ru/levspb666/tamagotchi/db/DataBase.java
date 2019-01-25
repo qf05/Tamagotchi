@@ -5,16 +5,20 @@ import android.arch.persistence.room.Room;
 import android.arch.persistence.room.RoomDatabase;
 import android.content.Context;
 
+import ru.levspb666.tamagotchi.dao.HistoryDao;
 import ru.levspb666.tamagotchi.dao.PetDao;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.model.Pet;
 
 // http://qaru.site/questions/152627/room-schema-export-directory-is-not-provided-to-the-annotation-processor-so-we-cannot-export-the-schema
-@Database(entities = {Pet.class}, version = 1, exportSchema = false)
+@Database(entities = {Pet.class, History.class}, version = 2, exportSchema = false)
 public abstract class DataBase extends RoomDatabase {
 
     private static DataBase DB_INSTANCE;
 
     public abstract PetDao petDao();
+
+    public abstract HistoryDao historyDao();
 // http://qaru.site/questions/14467653/android-room-persistent-appdatabaseimpl-does-not-exist
 
     // миграция базы
