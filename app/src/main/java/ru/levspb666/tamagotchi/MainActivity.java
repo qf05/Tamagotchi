@@ -20,6 +20,10 @@ import ru.levspb666.tamagotchi.model.Pet;
 
 public class MainActivity extends AppCompatActivity {
 
+    private static final String PREFERENCES_SOUND_OFF = "SOUND_OFF";
+    public static final String APP_PREFERENCES = "PREFERENCES";
+    public static final String PREFERENCES_SELECTED_PET = "SELECTED";
+    private SharedPreferences settings;
     public static Pet SELECTED_PET;
     public static boolean SOUND_OFF = false;
     private MenuItem soundCheckbox;
@@ -27,9 +31,6 @@ public class MainActivity extends AppCompatActivity {
     private ImageView petView;
     public static List<Pet> PETS = new ArrayList<>();
     private static DataBase db;
-    public static final String APP_PREFERENCES = "PREFERENCES";
-    public static final String PREFERENCES_SELECTED_PET = "SELECTED";
-    private SharedPreferences settings;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
         db = DataBase.getAppDatabase(getApplicationContext());
         PETS = db.petDao().getAll();
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        if (settings.contains(PREFERENCES_SOUND_OFF)) {
+            SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
+        }
         setViewPet();
     }
 
