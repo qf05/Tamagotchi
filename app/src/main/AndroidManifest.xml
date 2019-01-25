@@ -19,11 +19,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".OtherActivity" />
         <activity android:name=".WalkActivity" />
         <activity android:name=".SettingsActivity" />
         <activity android:name=".ChangePetActivity" />
         <activity android:name=".DeletePetActivity" />
+
+        <receiver android:name=".utils.ActionReceiver"/>
     </application>
 
 </manifest>

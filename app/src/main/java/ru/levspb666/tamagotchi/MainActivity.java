@@ -12,11 +12,14 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 
 import ru.levspb666.tamagotchi.db.DataBase;
+import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
+import ru.levspb666.tamagotchi.utils.AlarmUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -31,6 +34,7 @@ public class MainActivity extends AppCompatActivity {
     private ImageView petView;
     public static List<Pet> PETS = new ArrayList<>();
     private static DataBase db;
+    private ImageView shitView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +42,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         petName = findViewById(R.id.petName);
         petView = findViewById(R.id.petView);
+        shitView = findViewById(R.id.shit);
+        shitView.setOnClickListener(shitClickListener);
         db = DataBase.getAppDatabase(getApplicationContext());
         PETS = db.petDao().getAll();
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -75,6 +81,17 @@ public class MainActivity extends AppCompatActivity {
                     petView.setImageResource(R.drawable.cthulhu_small);
                     break;
             }
+            changeVisibility();
+        }
+    }
+
+    private void changeVisibility(){
+        if (SELECTED_PET.getNextShit() < Calendar.getInstance().getTime().getTime()) {
+            shitView.setVisibility(View.VISIBLE);
+            shitView.setClickable(true);
+        } else {
+            shitView.setVisibility(View.INVISIBLE);
+            shitView.setClickable(false);
         }
     }
 
@@ -83,11 +100,6 @@ public class MainActivity extends AppCompatActivity {
             Intent intent = new Intent(MainActivity.this, WalkActivity.class);
             startActivity(intent);
         }
-    }
-
-    public void onButtonClick(View view) {
-        Intent intent = new Intent(MainActivity.this, OtherActivity.class);
-        startActivity(intent);
     }
 
     @Override
@@ -120,4 +132,15 @@ public class MainActivity extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+
+    private View.OnClickListener shitClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            shitView.setVisibility(View.INVISIBLE);
+            shitView.setClickable(false);
+            SELECTED_PET.setNextShit(AlarmUtils.nextShit());
+            db.petDao().update(SELECTED_PET);
+            AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
+        }
+    };
 }

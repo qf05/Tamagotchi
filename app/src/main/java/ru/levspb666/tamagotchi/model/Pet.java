@@ -10,6 +10,7 @@ import java.io.Serializable;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.enums.PetsType;
+import ru.levspb666.tamagotchi.utils.AlarmUtils;
 
 //http://qaru.site/questions/16042145/sqlite-requires-having-a-unique-constraint-android-room-annotations
 @Entity(tableName = "pet",
@@ -73,7 +74,7 @@ public class Pet implements Serializable {
         this.isSlip = false;
         this.nextWalk = 0;
         this.nextSlip = 0;
-        this.nextShit = 0;
+        this.nextShit = AlarmUtils.nextShit();
         this.wakeUp = 0;
     }
 
