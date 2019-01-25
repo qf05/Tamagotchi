@@ -15,12 +15,14 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 public class AlarmUtils {
 
-    private static final int SHIT_TIME_REPEAT = 1;
+    private static final int SHIT_TIME_ADD = 1;
     private static final int SHIT_RANDOM_TIME = 1;
+    private static final int ILL_TIME_ADD = 1;
+    private static final int ILL_TIME_REPEAD = 1;
 
     public static long nextShit() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, (int) (SHIT_TIME_REPEAT + (Math.random()*SHIT_RANDOM_TIME)));
+        calendar.add(Calendar.MINUTE, (int) (SHIT_TIME_ADD + (Math.random()*SHIT_RANDOM_TIME)));
         return calendar.getTimeInMillis();
     }
 
@@ -44,4 +46,45 @@ public class AlarmUtils {
             }
         }
 
+    public static void setRepeatAlarm(Context context, ActionType action, Pet pet) {
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(action.toString(),
+                Uri.parse("pet_id:" + pet.getId()),
+                context.getApplicationContext(),
+                ActionReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(),
+                (int) pet.getId(),
+                intent,
+                FLAG_UPDATE_CURRENT);
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, ILL_TIME_ADD);
+        if (alarmMgr != null) {
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), ILL_TIME_REPEAD*1000*60, pendingIntent);
+        }
+    }
+
+    public static void cancelAllAlarm(Context context, Pet pet) {
+        cancelAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+        cancelAlarm(context.getApplicationContext(), ActionType.SHIT, pet);
+    }
+
+    public static void cancelAlarm(Context context, ActionType action, Pet pet) {
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(
+                action.toString(),
+                null,
+                context.getApplicationContext(),
+                ActionReceiver.class);
+        intent.setData(Uri.parse("pet_id:" + pet.getId()));
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(),
+                (int) pet.getId(),
+                intent,
+                FLAG_UPDATE_CURRENT);
+        if (alarmMgr != null) {
+            alarmMgr.cancel(pendingIntent);
+        }
+        pendingIntent.cancel();
+    }
 }

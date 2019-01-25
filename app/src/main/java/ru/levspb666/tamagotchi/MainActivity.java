@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     private static DataBase db;
     private ImageView shitView;
     public static Handler handler;
+    private Button ill;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
         petView = findViewById(R.id.petView);
         shitView = findViewById(R.id.shit);
         shitView.setOnClickListener(shitClickListener);
+        ill = findViewById(R.id.ill);
         db = DataBase.getAppDatabase(getApplicationContext());
         PETS = db.petDao().getAll();
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -95,8 +98,6 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-
-
     private void changeVisibility(){
         if (SELECTED_PET.getNextShit() < Calendar.getInstance().getTime().getTime()) {
             shitView.setVisibility(View.VISIBLE);
@@ -104,6 +105,13 @@ public class MainActivity extends AppCompatActivity {
         } else {
             shitView.setVisibility(View.INVISIBLE);
             shitView.setClickable(false);
+        }
+        if (SELECTED_PET.isIll()) {
+            ill.setVisibility(View.VISIBLE);
+            ill.setClickable(true);
+        } else {
+            ill.setVisibility(View.INVISIBLE);
+            ill.setClickable(false);
         }
     }
 
@@ -153,6 +161,9 @@ public class MainActivity extends AppCompatActivity {
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
             db.petDao().update(SELECTED_PET);
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
+            if (!SELECTED_PET.isIll()){
+                AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
+            }
         }
     };
 
@@ -160,6 +171,15 @@ public class MainActivity extends AppCompatActivity {
     protected void onStop() {
         super.onStop();
         handler = null;
+    }
+
+    public void ill(View view) {
+        SELECTED_PET.setIll(false);
+        db.petDao().update(SELECTED_PET);
+        ill.setVisibility(View.INVISIBLE);
+        ill.setClickable(false);
+        handler.sendEmptyMessage(0);
+        AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
     }
 
     private static class MyHandler extends Handler {

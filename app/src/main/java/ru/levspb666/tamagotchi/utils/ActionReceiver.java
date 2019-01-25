@@ -11,7 +11,12 @@ import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.model.Pet;
 
+import static ru.levspb666.tamagotchi.utils.AlarmUtils.cancelAllAlarm;
+import static ru.levspb666.tamagotchi.utils.AlarmUtils.setRepeatAlarm;
+
 public class ActionReceiver extends BroadcastReceiver {
+
+    private static int ILL_TAKE_HP = 1;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -28,7 +33,7 @@ public class ActionReceiver extends BroadcastReceiver {
 
                         break;
                     case ILL:
-
+                        pet = ill(context, pet);
                         break;
                     case SLEEP:
 
@@ -40,14 +45,33 @@ public class ActionReceiver extends BroadcastReceiver {
                         shit(context, pet);
                         break;
                 }
-            }
-            if (MainActivity.handler!=null){
-                MainActivity.handler.sendEmptyMessage(0);
+                db.petDao().update(pet);
+                if (MainActivity.handler != null) {
+                    MainActivity.handler.sendEmptyMessage(0);
+                }
+            }else {
+                cancelAllAlarm(context,pet);
             }
         }
     }
 
     private void shit(final Context context, Pet pet) {
+        setRepeatAlarm(context, ActionType.ILL, pet);
+    }
 
+    private Pet ill(final Context context, Pet pet) {
+        if (pet.isIll()) {
+            int hp = pet.getHp() - ILL_TAKE_HP;
+            if (hp > 0) {
+                pet.setHp(hp);
+            } else {
+                pet.setHp(0);
+                pet.setLive(false);
+                cancelAllAlarm(context, pet);
+            }
+        } else {
+            pet.setIll(true);
+        }
+        return pet;
     }
 }
