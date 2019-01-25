@@ -7,12 +7,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
@@ -25,6 +27,10 @@ import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.NotificationUtils;
+
+import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel;
+import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
+import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_HP_EAT;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -162,10 +168,8 @@ public class MainActivity extends AppCompatActivity {
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
             db.petDao().update(SELECTED_PET);
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
-            if (!SELECTED_PET.isIll()){
-                AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
-            }
-            NotificationUtils.notificationCancel(getApplicationContext(),ActionType.SHIT,SELECTED_PET);
+            AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+            notificationCancel(getApplicationContext(),ActionType.SHIT,SELECTED_PET);
         }
     };
 
@@ -182,7 +186,29 @@ public class MainActivity extends AppCompatActivity {
         ill.setClickable(false);
         handler.sendEmptyMessage(0);
         AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
-        NotificationUtils.notificationCancel(getApplicationContext(),ActionType.ILL,SELECTED_PET);
+        notificationCancel(getApplicationContext(),ActionType.ILL,SELECTED_PET);
+    }
+
+    public void eat(View view) {
+        if (SELECTED_PET.getSatiety() < 100) {
+            SELECTED_PET.setSatiety(SELECTED_PET.getSatiety() + ADD_EAT);
+            if (SELECTED_PET.getSatiety() > 100) {
+                SELECTED_PET.setSatiety(100);
+            }
+            SELECTED_PET.setHp(SELECTED_PET.getHp() + ADD_HP_EAT);
+            if (SELECTED_PET.getHp() > 100) {
+                SELECTED_PET.setHp(100);
+            }
+            db.petDao().update(SELECTED_PET);
+            handler.sendEmptyMessage(0);
+            notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
+            AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+        } else {
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +
+                    getString(R.string.not_hunger), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        }
     }
 
     private static class MyHandler extends Handler {

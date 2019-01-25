@@ -27,6 +27,7 @@ import java.util.Map;
 import ru.levspb666.tamagotchi.adapters.DeleteRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.model.Pet;
+import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
@@ -114,6 +115,7 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
                         db.petDao().delete(pet);
                         pets.remove(pet);
                         PETS.remove(pet);
+                        AlarmUtils.cancelAllAlarm(getApplicationContext(),pet);
                     }
                 }
                 dialog.cancel();

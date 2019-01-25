@@ -4,7 +4,6 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import java.util.Calendar;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
@@ -14,10 +13,10 @@ import ru.levspb666.tamagotchi.model.Pet;
 
 import static ru.levspb666.tamagotchi.utils.AlarmUtils.cancelAllAlarm;
 import static ru.levspb666.tamagotchi.utils.AlarmUtils.setRepeatAlarm;
+import static ru.levspb666.tamagotchi.utils.PetUtils.ILL_TAKE_HP;
+import static ru.levspb666.tamagotchi.utils.PetUtils.TAKE_EAT;
 
 public class ActionReceiver extends BroadcastReceiver {
-
-    private static int ILL_TAKE_HP = 1;
 
     @Override
     public void onReceive(final Context context, Intent intent) {
@@ -28,7 +27,7 @@ public class ActionReceiver extends BroadcastReceiver {
                 ActionType actionType = ActionType.valueOf(intent.getAction());
                 switch (actionType) {
                     case EAT:
-
+                        pet = eat(context, pet);
                         break;
                     case WALK:
 
@@ -57,13 +56,15 @@ public class ActionReceiver extends BroadcastReceiver {
     }
 
     private void shit(final Context context, Pet pet) {
-        setRepeatAlarm(context, ActionType.ILL, pet);
+        if (AlarmUtils.checkAlarm(context, ActionType.ILL, pet)) {
+            setRepeatAlarm(context, ActionType.ILL, pet);
+        }
         NotificationUtils.notification(context, pet, ActionType.SHIT);
     }
 
     private Pet ill(final Context context, Pet pet) {
         if (pet.isIll()) {
-            int hp = pet.getHp() - 1;
+            int hp = pet.getHp() - ILL_TAKE_HP;
             if (hp > 0) {
                 pet.setHp(hp);
                 if (hp < 30) {
@@ -78,6 +79,20 @@ public class ActionReceiver extends BroadcastReceiver {
         } else {
             pet.setIll(true);
             NotificationUtils.notification(context, pet, ActionType.ILL);
+        }
+        return pet;
+    }
+
+    private Pet eat(final Context context, Pet pet) {
+        int petSatiety = pet.getSatiety() - TAKE_EAT;
+        if (petSatiety <= 1) {
+            pet.setSatiety(1);
+            if (AlarmUtils.checkAlarm(context, ActionType.ILL, pet)) {
+                setRepeatAlarm(context, ActionType.ILL, pet);
+            }
+            NotificationUtils.notification(context, pet, ActionType.EAT);
+        } else {
+            pet.setSatiety(petSatiety);
         }
         return pet;
     }

@@ -18,6 +18,7 @@ import android.widget.TextView;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
+import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
@@ -69,6 +70,7 @@ public class SettingsActivity extends AppCompatActivity {
                 long id = db.petDao().insert(new Pet(name, petsType));
                 PETS = db.petDao().getAll();
                 SELECTED_PET = db.petDao().findById(id);
+                AlarmUtils.checkAllAlarmPet(getApplicationContext(),SELECTED_PET);
                 SharedPreferences.Editor editor = settings.edit();
                 editor.putLong(PREFERENCES_SELECTED_PET, SELECTED_PET.getId());
                 editor.apply();

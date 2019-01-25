@@ -13,6 +13,11 @@ import ru.levspb666.tamagotchi.model.Pet;
 
 public class PetUtils {
 
+    public static int ILL_TAKE_HP = 1;
+    public static int TAKE_EAT = 5;
+    public static int ADD_EAT = 17;
+    public static int ADD_HP_EAT = 6;
+
     public static boolean checkName(Context context, String name) {
         if (name.isEmpty() || name.replace(" ", "").isEmpty()) {
             Toast toast = Toast.makeText(context,

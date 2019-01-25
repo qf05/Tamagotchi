@@ -57,4 +57,15 @@
         android:onClick="ill"
         android:layout_margin="10dp"
         android:background="@drawable/ill" />
+
+    <Button
+        android:id="@+id/eat"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/goWalk"
+        android:layout_margin="10dp"
+        android:onClick="eat"
+        android:background="@drawable/eat"
+        />
 </RelativeLayout>
