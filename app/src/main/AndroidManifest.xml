@@ -25,6 +25,16 @@
         <activity android:name=".DeletePetActivity" />
 
         <receiver android:name=".utils.ActionReceiver"/>
+
+        <receiver android:enabled="true"
+            android:name=".utils.MyBootReceiver"
+            android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </receiver>
+
     </application>
 
 </manifest>
