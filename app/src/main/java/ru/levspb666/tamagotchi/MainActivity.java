@@ -24,6 +24,7 @@ import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
+import ru.levspb666.tamagotchi.utils.NotificationUtils;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -164,6 +165,7 @@ public class MainActivity extends AppCompatActivity {
             if (!SELECTED_PET.isIll()){
                 AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
             }
+            NotificationUtils.notificationCancel(getApplicationContext(),ActionType.SHIT,SELECTED_PET);
         }
     };
 
@@ -180,6 +182,7 @@ public class MainActivity extends AppCompatActivity {
         ill.setClickable(false);
         handler.sendEmptyMessage(0);
         AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
+        NotificationUtils.notificationCancel(getApplicationContext(),ActionType.ILL,SELECTED_PET);
     }
 
     private static class MyHandler extends Handler {

@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
@@ -49,28 +50,34 @@ public class ActionReceiver extends BroadcastReceiver {
                 if (MainActivity.handler != null) {
                     MainActivity.handler.sendEmptyMessage(0);
                 }
-            }else {
-                cancelAllAlarm(context,pet);
+            } else {
+                cancelAllAlarm(context, pet);
             }
         }
     }
 
     private void shit(final Context context, Pet pet) {
         setRepeatAlarm(context, ActionType.ILL, pet);
+        NotificationUtils.notification(context, pet, ActionType.SHIT);
     }
 
     private Pet ill(final Context context, Pet pet) {
         if (pet.isIll()) {
-            int hp = pet.getHp() - ILL_TAKE_HP;
+            int hp = pet.getHp() - 1;
             if (hp > 0) {
                 pet.setHp(hp);
+                if (hp < 30) {
+                    NotificationUtils.notification(context, pet, ActionType.CURE);
+                }
             } else {
                 pet.setHp(0);
                 pet.setLive(false);
+                NotificationUtils.notification(context, pet, ActionType.DIE);
                 cancelAllAlarm(context, pet);
             }
         } else {
             pet.setIll(true);
+            NotificationUtils.notification(context, pet, ActionType.ILL);
         }
         return pet;
     }
