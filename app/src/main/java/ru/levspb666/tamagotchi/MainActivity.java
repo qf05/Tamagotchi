@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private TextView petName;
     private ImageView petView;
     public static List<Pet> PETS = new ArrayList<>();
-    public static DataBase db;
+    private static DataBase db;
     public static final String APP_PREFERENCES = "PREFERENCES";
     public static final String PREFERENCES_SELECTED_PET = "SELECTED";
     private SharedPreferences settings;

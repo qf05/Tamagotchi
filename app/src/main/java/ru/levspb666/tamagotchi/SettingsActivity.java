@@ -93,7 +93,9 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void deletePet(View view) {
-
+        Intent intent = new Intent(SettingsActivity.this, DeletePetActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void changeNamePet(View view) {
