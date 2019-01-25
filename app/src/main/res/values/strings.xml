@@ -15,10 +15,13 @@
     <string name="ok">ОК</string>
     <string name="cancel">Отмена</string>
     <string name="name">Name</string>
-    <string name="pets_input">Выберите питомца:</string>
-    <string name="create_pet">Создание питомца</string>
-    <string name="input_name">Введите имя:</string>
-    <string name="sort_on">Сортировка по</string>
+    <string name="pets_input">Выберите питомца: </string>
+    <string name="create_pet">Создание питомца </string>
+    <string name="input_name">Введите имя: </string>
+    <string name="sort_on">Сортировка по </string>
+    <string name="this_name">Текущее имя: </string>
+    <string name="input_new_name">Введите новое имя:</string>
+    <string name="change_name_pet">Смена имени питомца</string>
 
 
     <string-array name="pets">

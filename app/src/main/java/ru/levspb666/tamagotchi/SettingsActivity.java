@@ -13,6 +13,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
+import android.widget.TextView;
 
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.PetsType;
@@ -96,8 +97,34 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void changeNamePet(View view) {
+        View layout = getLayoutInflater().inflate(R.layout.change_name_dialog, null);
+        TextView selectedPetName = layout.findViewById(R.id.selectedPetName);
+        selectedPetName.setText(getString(R.string.this_name) + SELECTED_PET.getName());
+        inputName = layout.findViewById(R.id.inputChangeName);
+        Button ok = layout.findViewById(R.id.okChangeName);
+        ok.setOnClickListener(okChangeNameListener);
+        Button cancel = layout.findViewById(R.id.cancelChangeName);
+        cancel.setOnClickListener(cancelListener);
 
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setView(layout).setCancelable(false);
+        dialog = builder.create();
+        ViewHelper.fonForDialog(dialog, (ImageView) layout.findViewById(R.id.fon_change_name_dialog));
+        dialog.show();
     }
+
+    View.OnClickListener okChangeNameListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            String name = inputName.getText().toString().trim();
+            if (PetUtils.checkName(SettingsActivity.this, name)) {
+                SELECTED_PET.setName(name);
+                db.petDao().update(SELECTED_PET);
+                PETS = db.petDao().getAll();
+                dialog.cancel();
+            }
+        }
+    };
 
     public void goHome(View view) {
         Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
