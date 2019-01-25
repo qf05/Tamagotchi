@@ -53,6 +53,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
+        android:layout_below="@+id/petName"
         android:layout_margin="10dp"
         android:background="@drawable/ill" />
 </RelativeLayout>

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -11,6 +13,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -35,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
     public static List<Pet> PETS = new ArrayList<>();
     private static DataBase db;
     private ImageView shitView;
+    public static Handler handler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -51,6 +55,12 @@ public class MainActivity extends AppCompatActivity {
             SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
         }
         setViewPet();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        handler = new MyHandler(this);
     }
 
     private void setViewPet() {
@@ -84,6 +94,8 @@ public class MainActivity extends AppCompatActivity {
             changeVisibility();
         }
     }
+
+
 
     private void changeVisibility(){
         if (SELECTED_PET.getNextShit() < Calendar.getInstance().getTime().getTime()) {
@@ -143,4 +155,31 @@ public class MainActivity extends AppCompatActivity {
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
         }
     };
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        handler = null;
+    }
+
+    private static class MyHandler extends Handler {
+
+        WeakReference<MainActivity> wrActivity;
+
+        public MyHandler(MainActivity activity) {
+            wrActivity = new WeakReference<>(activity);
+        }
+
+        @Override
+        public void handleMessage(Message msg) {
+            super.handleMessage(msg);
+            MainActivity activity = wrActivity.get();
+            if (activity != null) {
+                if (SELECTED_PET != null) {
+                    SELECTED_PET = db.petDao().findById(SELECTED_PET.getId());
+                }
+                activity.changeVisibility();
+            }
+        }
+    }
 }

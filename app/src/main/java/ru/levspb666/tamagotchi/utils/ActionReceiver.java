@@ -6,6 +6,7 @@ import android.content.Intent;
 
 import java.util.Objects;
 
+import ru.levspb666.tamagotchi.MainActivity;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.model.Pet;
@@ -40,7 +41,9 @@ public class ActionReceiver extends BroadcastReceiver {
                         break;
                 }
             }
-
+            if (MainActivity.handler!=null){
+                MainActivity.handler.sendEmptyMessage(0);
+            }
         }
     }
 
