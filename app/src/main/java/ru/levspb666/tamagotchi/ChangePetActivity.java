@@ -45,6 +45,20 @@ public class ChangePetActivity extends AppCompatActivity implements ChangeRVAdap
         rv.addItemDecoration(dividerItemDecoration);
 
         pets = DataBase.getAppDatabase(getApplicationContext()).petDao().getAll();
+        Spinner sortSpinner = findViewById(R.id.changeSort);
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PetUtils.sort(pets, position);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                PetUtils.sort(pets, 0);
+            }
+        });
         adapter = new ChangeRVAdapter(ChangePetActivity.this, pets);
         adapter.setClickListener(ChangePetActivity.this);
         rv.setAdapter(adapter);

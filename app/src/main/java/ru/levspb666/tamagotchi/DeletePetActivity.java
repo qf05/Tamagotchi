@@ -13,7 +13,6 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -54,6 +53,21 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         rv.addItemDecoration(dividerItemDecoration);
         db = DataBase.getAppDatabase(getApplicationContext());
         pets = db.petDao().getAll();
+        Spinner sortSpinner = findViewById(R.id.deleteSort);
+        sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                PetUtils.sort(pets, position);
+                adapter.notifyDataSetChanged();
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                PetUtils.sort(pets, 0);
+            }
+        });
+
         adapter = new DeleteRVAdapter(this, pets);
         adapter.setClickListener(DeletePetActivity.this);
         rv.setAdapter(adapter);
@@ -85,7 +99,7 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         builder.setView(layout)
                 .setCancelable(false);
         final AlertDialog dialog = builder.create();
-        ViewHelper.fonForDialog(dialog,fon);
+        ViewHelper.fonForDialog(dialog, fon);
         ok.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
