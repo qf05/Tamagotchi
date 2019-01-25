@@ -110,4 +110,14 @@
             android:scaleType="fitXY"
             android:src="@drawable/shell_06" />
     </LinearLayout>
+
+    <Button
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentBottom="true"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="20dp"
+        android:background="@drawable/home"
+        android:onClick="goHome" />
 </RelativeLayout>

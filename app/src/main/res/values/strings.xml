@@ -18,11 +18,17 @@
     <string name="pets_input">Выберите питомца:</string>
     <string name="create_pet">Создание питомца</string>
     <string name="input_name">Введите имя:</string>
+    <string name="sort_on">Сортировка по</string>
 
 
     <string-array name="pets">
         <item>Кошка</item>
         <item>Собака</item>
         <item>Ктулху</item>
+    </string-array>
+
+    <string-array name="sort">
+        <item>имени</item>
+        <item>уровню</item>
     </string-array>
 </resources>

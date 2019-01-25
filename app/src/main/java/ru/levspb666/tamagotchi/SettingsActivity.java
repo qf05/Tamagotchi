@@ -2,6 +2,7 @@ package ru.levspb666.tamagotchi;
 
 import android.app.AlertDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -85,7 +86,9 @@ public class SettingsActivity extends AppCompatActivity {
 
 
     public void changePet(View view) {
-
+        Intent intent = new Intent(SettingsActivity.this, ChangePetActivity.class);
+        startActivity(intent);
+        finish();
     }
 
     public void deletePet(View view) {
@@ -94,5 +97,11 @@ public class SettingsActivity extends AppCompatActivity {
 
     public void changeNamePet(View view) {
 
+    }
+
+    public void goHome(View view) {
+        Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
