@@ -13,6 +13,7 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ImageView;
@@ -55,6 +56,9 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         db = DataBase.getAppDatabase(getApplicationContext());
         pets = db.petDao().getAll();
         Spinner sortSpinner = findViewById(R.id.deleteSort);
+        String[] stringArray = getResources().getStringArray(R.array.sort);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(this, R.layout.spinner_adapter,R.id.spinner_text,stringArray);
+        sortSpinner.setAdapter(spinnerAdapter);
         sortSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
 
             @Override

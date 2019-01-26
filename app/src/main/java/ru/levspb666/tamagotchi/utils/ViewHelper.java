@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -58,6 +59,9 @@ public class ViewHelper {
     public static void createDialog(final Activity activity, final Context context) {
         View layout = activity.getLayoutInflater().inflate(R.layout.create_pet_dialog, null);
         final Spinner spinnerCreate = layout.findViewById(R.id.inputTypePet);
+        String[] stringArray = context.getResources().getStringArray(R.array.pets);
+        ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<>(context, R.layout.spinner_adapter,R.id.spinner_text,stringArray);
+        spinnerCreate.setAdapter(spinnerAdapter);
         final EditText inputName = layout.findViewById(R.id.inputName);
         Button ok = layout.findViewById(R.id.okCreate);
         final Button cancel = layout.findViewById(R.id.cancelCreate);
