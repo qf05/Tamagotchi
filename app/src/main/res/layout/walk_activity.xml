@@ -26,4 +26,16 @@
         android:layout_marginBottom="50dp"
         android:layout_alignParentBottom="true"
         android:background="@drawable/home" />
+
+    <ProgressBar
+        android:id="@+id/walkProgressBar"
+        android:layout_margin="20dp"
+        android:progressDrawable="@drawable/progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:indeterminate="false"
+        android:max="9"
+        android:progress="0" />
+
 </RelativeLayout>

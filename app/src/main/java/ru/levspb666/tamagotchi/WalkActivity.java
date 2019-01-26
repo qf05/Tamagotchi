@@ -13,7 +13,9 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
@@ -33,6 +35,10 @@ public class WalkActivity extends AppCompatActivity {
     private ImageView petView;
     private MediaPlayer mp;
     private AnimatorSet animatorSet;
+    private ProgressBar progressBar;
+    private Button home;
+    private boolean complete = false;
+    private int indent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +46,15 @@ public class WalkActivity extends AppCompatActivity {
         setContentView(R.layout.walk_activity);
 
         petView = findViewById(R.id.petWalk);
+        progressBar = findViewById(R.id.walkProgressBar);
+        progressBar.setMax(10 + SELECTED_PET.getLvl() / 2);
+        if (progressBar.getProgress() >= progressBar.getMax()) {
+            progressBar.setVisibility(View.INVISIBLE);
+        }
+        home = findViewById(R.id.toHomeFromWalk);
+        home.setClickable(false);
+        home.setAlpha(0.3f);
+        complete = false;
         switch (PetsType.valueOf(SELECTED_PET.getType())) {
             case CAT:
                 petView.setImageResource(R.drawable.cat);
@@ -67,6 +82,7 @@ public class WalkActivity extends AppCompatActivity {
             @Override
             public void run() {
                 // Получаем размеры
+                indent = progressBar.getBottom() + 100;
                 Display display = getWindowManager().getDefaultDisplay();
                 Point size = new Point();
                 display.getSize(size);
@@ -91,6 +107,9 @@ public class WalkActivity extends AppCompatActivity {
 
         do {
             nextY = thisY + (int) (Math.random() * height) - height / 2;
+            if (progressBar.getProgress() < progressBar.getMax()) {
+                nextY += indent;
+            }
         } while (nextY < 0 || nextY > height);
 
         float nextAngle = (float) Math.toDegrees(Math.atan2(thisY - nextY, thisX - nextX));
@@ -151,6 +170,14 @@ public class WalkActivity extends AppCompatActivity {
                 case CTHULHU:
                     playSound(R.raw.cthulhu);
                     break;
+            }
+
+            progressBar.incrementProgressBy(1);
+            if (!complete && progressBar.getProgress() == progressBar.getMax()) {
+                complete = true;
+                progressBar.setVisibility(View.INVISIBLE);
+                home.setClickable(true);
+                home.setAlpha(1f);
             }
         }
     };

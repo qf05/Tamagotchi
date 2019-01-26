@@ -13,6 +13,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -26,7 +27,6 @@ import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
-import ru.levspb666.tamagotchi.utils.NotificationUtils;
 
 import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
@@ -48,6 +48,8 @@ public class MainActivity extends AppCompatActivity {
     private ImageView shitView;
     public static Handler handler;
     private Button ill;
+    private Button walk;
+    private ProgressBar eatProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -58,13 +60,15 @@ public class MainActivity extends AppCompatActivity {
         shitView = findViewById(R.id.shit);
         shitView.setOnClickListener(shitClickListener);
         ill = findViewById(R.id.ill);
+        walk = findViewById(R.id.goWalk);
+        eatProgressBar = findViewById(R.id.eatProgressBar);
         db = DataBase.getAppDatabase(getApplicationContext());
         PETS = db.petDao().getAll();
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if (settings.contains(PREFERENCES_SOUND_OFF)) {
             SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
         }
-        setViewPet();
+        checkPet();
     }
 
     @Override
@@ -73,7 +77,7 @@ public class MainActivity extends AppCompatActivity {
         handler = new MyHandler(this);
     }
 
-    private void setViewPet() {
+    private void checkPet() {
         if (settings.contains(PREFERENCES_SELECTED_PET)) {
             long petId = settings.getLong(PREFERENCES_SELECTED_PET, -1);
             if (petId >= 0) {
@@ -90,6 +94,12 @@ public class MainActivity extends AppCompatActivity {
 
         if (SELECTED_PET != null) {
             petName.setText(SELECTED_PET.getName());
+            setViewPet();
+        }
+    }
+
+    private void setViewPet() {
+        if (SELECTED_PET.isLive()) {
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
                     petView.setImageResource(R.drawable.cat_small);
@@ -102,10 +112,19 @@ public class MainActivity extends AppCompatActivity {
                     break;
             }
             changeVisibility();
+        } else {
+            petView.setImageResource(R.drawable.die);
+            eatProgressBar.setProgress(1);
+            ill.setVisibility(View.INVISIBLE);
+            ill.setClickable(false);
+            shitView.setVisibility(View.INVISIBLE);
+            shitView.setClickable(false);
+            walk.setVisibility(View.INVISIBLE);
+            walk.setClickable(false);
         }
     }
 
-    private void changeVisibility(){
+    private void changeVisibility() {
         if (SELECTED_PET.getNextShit() < Calendar.getInstance().getTime().getTime()) {
             shitView.setVisibility(View.VISIBLE);
             shitView.setClickable(true);
@@ -120,6 +139,9 @@ public class MainActivity extends AppCompatActivity {
             ill.setVisibility(View.INVISIBLE);
             ill.setClickable(false);
         }
+        walk.setVisibility(View.VISIBLE);
+        walk.setClickable(true);
+        eatProgressBar.setProgress(SELECTED_PET.getSatiety());
     }
 
     public void goWalk(View view) {
@@ -163,13 +185,12 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener shitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            shitView.setVisibility(View.INVISIBLE);
-            shitView.setClickable(false);
+            handler.sendEmptyMessage(0);
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
             db.petDao().update(SELECTED_PET);
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
             AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
-            notificationCancel(getApplicationContext(),ActionType.SHIT,SELECTED_PET);
+            notificationCancel(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
         }
     };
 
@@ -185,8 +206,8 @@ public class MainActivity extends AppCompatActivity {
         ill.setVisibility(View.INVISIBLE);
         ill.setClickable(false);
         handler.sendEmptyMessage(0);
-        AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.ILL,SELECTED_PET);
-        notificationCancel(getApplicationContext(),ActionType.ILL,SELECTED_PET);
+        AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.ILL, SELECTED_PET);
+        notificationCancel(getApplicationContext(), ActionType.ILL, SELECTED_PET);
     }
 
     public void eat(View view) {
@@ -204,7 +225,7 @@ public class MainActivity extends AppCompatActivity {
             notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
             AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
         } else {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
                     getString(R.string.not_hunger), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
@@ -227,7 +248,7 @@ public class MainActivity extends AppCompatActivity {
                 if (SELECTED_PET != null) {
                     SELECTED_PET = db.petDao().findById(SELECTED_PET.getId());
                 }
-                activity.changeVisibility();
+                activity.setViewPet();
             }
         }
     }

@@ -53,7 +53,7 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/petName"
+        android:layout_below="@+id/eatProgressBar"
         android:onClick="ill"
         android:layout_margin="10dp"
         android:background="@drawable/ill" />
@@ -68,4 +68,17 @@
         android:onClick="eat"
         android:background="@drawable/eat"
         />
+
+    <ProgressBar
+        android:id="@+id/eatProgressBar"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:layout_margin="10dp"
+        android:indeterminate="false"
+        android:layout_below="@+id/petName"
+        android:max="100"
+        android:progress="1"
+        android:progressDrawable="@drawable/progress"
+        android:progressTint="#FFFF00" />
 </RelativeLayout>
