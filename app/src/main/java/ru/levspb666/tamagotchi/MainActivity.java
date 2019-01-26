@@ -14,11 +14,13 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -152,19 +154,172 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     private void setViewPet() {
         PETS = db.petDao().getAll();
         if (SELECTED_PET.isLive()) {
+            int height = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
-                    petView.setImageResource(R.drawable.cat_small);
-                    break;
+                if (SELECTED_PET.getLvl()<20){
+                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                            ViewGroup.LayoutParams.MATCH_PARENT, height/3);
+                    layoutParams.setMargins(0,0,0,height/15);
+                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                    petView.setLayoutParams(layoutParams);
+                    petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                    if (SELECTED_PET.isSlip()){
+                        petView.setImageResource(R.drawable.cat_small_sleep);
+                    }else {
+                        if (SELECTED_PET.isLive()){
+                            petView.setImageResource(R.drawable.cat_small);
+                        }else {
+                            petView.setImageResource(R.drawable.cat_small_sleep);
+                        }
+                    }
+
+                }else {
+                    if (SELECTED_PET.getLvl() < 50) {
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2.5));
+                        layoutParams.setMargins(0,0,0,height/15);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        petView.setLayoutParams(layoutParams);
+                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (SELECTED_PET.isSlip()){
+                            petView.setImageResource(R.drawable.cat_norm_sleep);
+                        }else {
+                            if (SELECTED_PET.isLive()){
+                                petView.setImageResource(R.drawable.cat_norm);
+                            }else {
+                                petView.setImageResource(R.drawable.cat_norm_sleep);
+                            }
+                        }
+                    }else {
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, height/2);
+                        layoutParams.setMargins(height/10,0,0,height/30);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        petView.setLayoutParams(layoutParams);
+                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (SELECTED_PET.isSlip()){
+                            petView.setImageResource(R.drawable.cat_old_sleep);
+                        }else {
+                            if (SELECTED_PET.isLive()){
+                                petView.setImageResource(R.drawable.cat_old);
+                            }else {
+                                petView.setImageResource(R.drawable.cat_old_sleep);
+                            }
+                        }
+                    }
+                }
+                break;
                 case DOG:
-                    petView.setImageResource(R.drawable.dog_small);
+                    if (SELECTED_PET.getLvl()<20){
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, height/3);
+                        layoutParams.setMargins(0,0,0,height/10);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        petView.setLayoutParams(layoutParams);
+                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (SELECTED_PET.isSlip()){
+                            petView.setImageResource(R.drawable.dog_small_sleep);
+                        }else {
+                            if (SELECTED_PET.isLive()){
+                                petView.setImageResource(R.drawable.dog_small);
+                            }else {
+                                petView.setImageResource(R.drawable.dog_small_sleep);
+                            }
+                        }
+                    }else {
+                        if (SELECTED_PET.getLvl() < 50) {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2));
+                            layoutParams.setMargins(0,0,0,height/10);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            if (SELECTED_PET.isSlip()){
+                                petView.setImageResource(R.drawable.dog_norm_sleep);
+                            }else {
+                                if (SELECTED_PET.isLive()){
+                                    petView.setImageResource(R.drawable.dog_norm);
+                                }else {
+                                    petView.setImageResource(R.drawable.dog_norm_sleep);
+                                }
+                            }
+                        }else {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/1.8));
+                            layoutParams.setMargins(0,0,0,height/10);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            if (SELECTED_PET.isSlip()){
+                                petView.setImageResource(R.drawable.dog_old_sleep);
+                            }else {
+                                if (SELECTED_PET.isLive()){
+                                    petView.setImageResource(R.drawable.dog_old);
+                                }else {
+                                    petView.setImageResource(R.drawable.dog_old_sleep);
+                                }
+                            }
+                        }
+                    }
                     break;
                 case CTHULHU:
-                    petView.setImageResource(R.drawable.cthulhu_small);
+                    if (SELECTED_PET.getLvl()<20){
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/3));
+                        layoutParams.setMargins(0,0,0,height/10);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        petView.setLayoutParams(layoutParams);
+                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (SELECTED_PET.isSlip()){
+                            petView.setImageResource(R.drawable.cthulhu_small_sleep);
+                        }else {
+                            if (SELECTED_PET.isLive()){
+                                petView.setImageResource(R.drawable.cthulhu_small);
+                            }else {
+                                petView.setImageResource(R.drawable.cthulhu_small_sleep);
+                            }
+                        }
+                    }else {
+                        if (SELECTED_PET.getLvl() < 50) {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2.5));
+                            layoutParams.setMargins(0,0,0,height/10);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            if (SELECTED_PET.isSlip()){
+                                petView.setImageResource(R.drawable.cthulhu_norm_sleep);
+                            }else {
+                                if (SELECTED_PET.isLive()){
+                                    petView.setImageResource(R.drawable.cthulhu_norm);
+                                }else {
+                                    petView.setImageResource(R.drawable.cthulhu_norm_sleep);
+                                }
+                            }
+                        }else {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/1.5));
+                            layoutParams.setMargins(0,0,0,height/10);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            if (SELECTED_PET.isSlip()){
+                                petView.setImageResource(R.drawable.cthulhu_old_sleep);
+                            }else {
+                                if (SELECTED_PET.isLive()){
+                                    petView.setImageResource(R.drawable.cthulhu_old);
+                                }else {
+                                    petView.setImageResource(R.drawable.cthulhu_old_sleep);
+                                }
+                            }
+                        }
+                    }
                     break;
             }
             changeVisibility();
         } else {
+            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             petView.setImageResource(R.drawable.die);
             eatProgressBar.setProgress(1);
             ill.setVisibility(View.INVISIBLE);
