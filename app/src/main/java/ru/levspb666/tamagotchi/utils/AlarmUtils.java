@@ -23,11 +23,20 @@ public class AlarmUtils {
     private static final int ILL_TIME_ADD = 1;
     private static final int ILL_TIME_REPEAD = 1;
     private static final int EAT_TIME = 1;
+    private static final int WALK_TIME_ADD = 1;
+    private static final int WALK_RANDOM_TIME =1;
 
     public static long nextShit() {
         Calendar calendar = Calendar.getInstance();
         calendar.add(Calendar.MINUTE, (int) (SHIT_TIME_ADD + (Math.random()*SHIT_RANDOM_TIME)));
         return calendar.getTimeInMillis();
+    }
+
+    public static long nextWalk() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.SECOND, (int) (WALK_TIME_ADD + (Math.random() * WALK_RANDOM_TIME)));
+        return calendar.getTimeInMillis();
+
     }
 
 
@@ -70,6 +79,7 @@ public class AlarmUtils {
         cancelAlarm(context.getApplicationContext(), ActionType.ILL, pet);
         cancelAlarm(context.getApplicationContext(), ActionType.SHIT, pet);
         cancelAlarm(context.getApplicationContext(), ActionType.EAT, pet);
+        cancelAlarm(context.getApplicationContext(),ActionType.WALK, pet);
     }
 
     public static void cancelAlarm(Context context, ActionType action, Pet pet) {
@@ -120,6 +130,14 @@ public class AlarmUtils {
                 && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
             setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
         }
+        if (pet.getNextWalk() > Calendar.getInstance().getTimeInMillis()
+                && checkAlarm(context.getApplicationContext(), ActionType.WALK, pet)) {
+            setAlarm(context.getApplicationContext(), ActionType.WALK, pet);
+        }
+        if (pet.getNextWalk() <= Calendar.getInstance().getTimeInMillis()
+                && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
+            setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+        }
     }
 
     public static void checkAllAlarm(Context context, List<Pet> pets) {
@@ -131,9 +149,11 @@ public class AlarmUtils {
     }
 
     public static boolean allRight(Pet pet) {
+        long now = Calendar.getInstance().getTimeInMillis();
         return !pet.isIll()
-                && pet.getNextShit() > Calendar.getInstance().getTimeInMillis()
-                && pet.getSatiety() > 1;
+                && pet.getNextShit() > now
+                && pet.getSatiety() > 1
+                && pet.getNextWalk() > now;
     }
 
     public static void cancelAlarmIllWithCheck(Context context, Pet pet) {

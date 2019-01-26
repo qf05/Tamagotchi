@@ -74,6 +74,7 @@ public class MainActivity extends AppCompatActivity {
         if (settings.contains(PREFERENCES_SOUND_OFF)) {
             SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
         }
+        AlarmUtils.checkAllAlarm(getApplicationContext(),PETS);
         checkPet();
     }
 

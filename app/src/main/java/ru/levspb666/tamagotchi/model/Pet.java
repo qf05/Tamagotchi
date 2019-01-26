@@ -72,7 +72,7 @@ public class Pet implements Serializable {
         this.isLive = true;
         this.isIll = false;
         this.isSlip = false;
-        this.nextWalk = 0;
+        this.nextWalk = AlarmUtils.nextWalk();
         this.nextSlip = 0;
         this.nextShit = AlarmUtils.nextShit();
         this.wakeUp = 0;

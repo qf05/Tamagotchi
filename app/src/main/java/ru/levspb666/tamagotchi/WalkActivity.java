@@ -17,7 +17,10 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import ru.levspb666.tamagotchi.db.DataBase;
+import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
+import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static android.view.View.TRANSLATION_X;
@@ -39,6 +42,7 @@ public class WalkActivity extends AppCompatActivity {
     private Button home;
     private boolean complete = false;
     private int indent;
+    private DataBase db;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,6 +78,7 @@ public class WalkActivity extends AppCompatActivity {
                 break;
         }
         petView.setOnClickListener(onClickListener);
+        db = DataBase.getAppDatabase(getApplicationContext());
         getSize();
     }
 
@@ -178,6 +183,11 @@ public class WalkActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 home.setClickable(true);
                 home.setAlpha(1f);
+                AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.WALK,SELECTED_PET);
+                SELECTED_PET.setNextWalk(AlarmUtils.nextWalk());
+                db.petDao().update(SELECTED_PET);
+                AlarmUtils.setAlarm(getApplicationContext(), ActionType.WALK,SELECTED_PET);
+                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
             }
         }
     };

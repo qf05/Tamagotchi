@@ -30,7 +30,7 @@ public class ActionReceiver extends BroadcastReceiver {
                         pet = eat(context, pet);
                         break;
                     case WALK:
-
+                        walk(context,pet);
                         break;
                     case ILL:
                         pet = ill(context, pet);
@@ -95,5 +95,12 @@ public class ActionReceiver extends BroadcastReceiver {
             pet.setSatiety(petSatiety);
         }
         return pet;
+    }
+
+    private void walk(Context context, Pet pet){
+        if (AlarmUtils.checkAlarm(context, ActionType.ILL, pet)) {
+            setRepeatAlarm(context, ActionType.ILL, pet);
+        }
+        NotificationUtils.notification(context, pet, ActionType.WALK);
     }
 }
