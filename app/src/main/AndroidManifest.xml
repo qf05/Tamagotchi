@@ -21,8 +21,8 @@
         </activity>
         <activity android:name=".WalkActivity" />
         <activity android:name=".SettingsActivity" />
-        <activity android:name=".ChangePetActivity" />
         <activity android:name=".DeletePetActivity" />
+        <activity android:name=".NotificationSettingsActivity" />
 
         <receiver android:name=".utils.ActionReceiver"/>
 

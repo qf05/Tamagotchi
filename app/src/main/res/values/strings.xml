@@ -31,6 +31,14 @@
     <string name="not_sleep_if_ill">не может спать пока болеет!</string>
     <string name="not_walk_if_sleep">не может гулять пока спит!</string>
     <string name="notification_settings">уведомления</string>
+    <string name="silence_mode">Режимы тишины</string>
+    <string name="start">Начало</string>
+    <string name="end">Конец</string>
+    <string name="start_silence">Время начала тишины</string>
+    <string name="stop_silence">Время окончания тишины</string>
+    <string name="change">Изменить</string>
+    <string name="if_pet_wake_up">Уведомления что питомец проснулся</string>
+    <string name="not_notification">Отключить все уведомления</string>
 
 
     <string-array name="pets">

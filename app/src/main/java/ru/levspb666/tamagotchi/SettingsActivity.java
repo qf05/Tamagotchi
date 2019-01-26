@@ -101,6 +101,8 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void notification(View view) {
+        Intent intent = new Intent(SettingsActivity.this, NotificationSettingsActivity.class);
+        startActivity(intent);
     }
 
     public void history(View view) {
