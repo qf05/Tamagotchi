@@ -21,7 +21,7 @@ public class AlarmUtils {
     private static final int SHIT_TIME_ADD = 1;
     private static final int SHIT_RANDOM_TIME = 1;
     private static final int ILL_TIME_ADD = 1;
-    private static final int ILL_TIME_REPEAD = 1;
+    private static final int ILL_TIME_REPEAT = 1;
     private static final int EAT_TIME = 1;
     private static final int WALK_TIME_ADD = 1;
     private static final int WALK_RANDOM_TIME = 1;
@@ -50,7 +50,7 @@ public class AlarmUtils {
 
     public static long nextWakeUp() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, (int) (WAKE_UP_TIME_ADD+ (Math.random() * WAKE_UP_RANDOM_TIME)));
+        calendar.add(Calendar.MINUTE, (int) (WAKE_UP_TIME_ADD + (Math.random() * WAKE_UP_RANDOM_TIME)));
         return calendar.getTimeInMillis();
     }
 
@@ -191,13 +191,12 @@ public class AlarmUtils {
     public static void cancelAlarmIllWithCheck(Context context, Pet pet) {
         if (allRight(pet)) {
             cancelAlarm(context.getApplicationContext(), ActionType.ILL, pet);
-        } else {
-            Log.e("cancelAlarmIll", !pet.isIll()
-                    + "  " + (pet.getNextShit() > Calendar.getInstance().getTimeInMillis())
-                    + "  " + (pet.getSatiety() > 1)
-                    + "  " + (pet.getNextWalk() > Calendar.getInstance().getTimeInMillis())
-                    + "  " + (pet.getNextSlip() > Calendar.getInstance().getTimeInMillis()));
         }
+        Log.e("cancelAlarmIll", "NotILL " + !pet.isIll());
+        Log.e("cancelAlarmIll", "SHIT " + (pet.getNextShit() > Calendar.getInstance().getTimeInMillis()));
+        Log.e("cancelAlarmIll", "EAT " + (pet.getSatiety() > 1));
+        Log.e("cancelAlarmIll", "WALK " + (pet.getNextWalk() > Calendar.getInstance().getTimeInMillis()));
+        Log.e("cancelAlarmIll", "SLEEP " + (pet.getNextSlip() > Calendar.getInstance().getTimeInMillis()));
     }
 
     private static long time(ActionType action, Pet pet) {
@@ -226,7 +225,7 @@ public class AlarmUtils {
             case EAT:
                 return EAT_TIME * 1000 * 60;
             case ILL:
-                return ILL_TIME_REPEAD * 1000 * 60;
+                return ILL_TIME_REPEAT * 1000 * 60;
         }
         return 1000 * 60;
     }

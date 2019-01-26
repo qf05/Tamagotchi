@@ -7,12 +7,16 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -22,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
 
+import ru.levspb666.tamagotchi.adapters.QuickChangePetRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
@@ -33,7 +38,7 @@ import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_HP_EAT;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements QuickChangePetRVAdapter.ItemClickListener {
 
     private static final String PREFERENCES_SOUND_OFF = "SOUND_OFF";
     public static final String APP_PREFERENCES = "PREFERENCES";
@@ -54,6 +59,10 @@ public class MainActivity extends AppCompatActivity {
     private ProgressBar hpProgressBar;
     private ProgressBar expProgressBar;
     private TextView lvl;
+    private QuickChangePetRVAdapter adapter;
+    private boolean viewYourPets = false;
+    private ImageView upDown;
+    private RecyclerView rv;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,13 +78,38 @@ public class MainActivity extends AppCompatActivity {
         hpProgressBar = findViewById(R.id.hpProgressBar);
         expProgressBar = findViewById(R.id.expProgressBar);
         lvl = findViewById(R.id.lvl);
+        LinearLayout yourPets = findViewById(R.id.yourPets);
+        yourPets.setOnClickListener(changePetClickListener);
+        upDown = findViewById(R.id.up_down);
         db = DataBase.getAppDatabase(getApplicationContext());
-        PETS = db.petDao().getAll();
+
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if (settings.contains(PREFERENCES_SOUND_OFF)) {
             SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
         }
         AlarmUtils.checkAllAlarm(getApplicationContext(), PETS);
+
+        rv = findViewById(R.id.new_change_rv);
+        rv.setHasFixedSize(true);
+        LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        rv.setLayoutManager(llm);
+        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
+                llm.getOrientation());
+        rv.addItemDecoration(dividerItemDecoration);
+        adapter = new QuickChangePetRVAdapter(MainActivity.this);
+        adapter.setClickListener(MainActivity.this);
+        rv.setAdapter(adapter);
+        viewYourPets = false;
+        ImageView imageView = findViewById(R.id.mainBackGround);
+        imageView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                rv.setVisibility(View.INVISIBLE);
+                upDown.setRotation(0);
+                viewYourPets = false;
+                handler.sendEmptyMessage(0);
+            }
+        });
         checkPet();
     }
 
@@ -86,6 +120,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void checkPet() {
+        PETS = db.petDao().getAll();
         if (settings.contains(PREFERENCES_SELECTED_PET)) {
             long petId = settings.getLong(PREFERENCES_SELECTED_PET, -1);
             if (petId >= 0) {
@@ -107,6 +142,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setViewPet() {
+        PETS = db.petDao().getAll();
         if (SELECTED_PET.isLive()) {
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
@@ -134,6 +170,13 @@ public class MainActivity extends AppCompatActivity {
             expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
             expProgressBar.setProgress(SELECTED_PET.getExperience());
             lvl.setText(SELECTED_PET.getLvl() + getString(R.string.lvl));
+        }
+        if (viewYourPets) {
+            rv.setVisibility(View.VISIBLE);
+            upDown.setRotation(180);
+        } else {
+            rv.setVisibility(View.INVISIBLE);
+            upDown.setRotation(0);
         }
     }
 
@@ -209,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
     private View.OnClickListener shitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            viewYourPets = false;
             handler.sendEmptyMessage(0);
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
             PetUtils.addExperience(10);
@@ -226,6 +270,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void ill(View view) {
+        viewYourPets = false;
         SELECTED_PET.setIll(false);
         PetUtils.addExperience(11);
         db.petDao().update(SELECTED_PET);
@@ -237,6 +282,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void eat(View view) {
+        viewYourPets = false;
         if (SELECTED_PET.isSlip()) {
             Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                     getString(R.string.not_eat_if_sleep), Toast.LENGTH_SHORT);
@@ -267,6 +313,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void sleep(View view) {
+        viewYourPets = false;
         if (SELECTED_PET.isSlip()) {
             Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                     getString(R.string.is_sleep), Toast.LENGTH_SHORT);
@@ -291,6 +338,25 @@ public class MainActivity extends AppCompatActivity {
                 toast.show();
             }
         }
+    }
+
+    View.OnClickListener changePetClickListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            viewYourPets = !viewYourPets;
+            handler.sendEmptyMessage(0);
+            adapter.notifyDataSetChanged();
+        }
+    };
+
+    @Override
+    public void onItemClick(View view, int position) {
+        SELECTED_PET = PETS.get(position);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putLong(PREFERENCES_SELECTED_PET, SELECTED_PET.getId());
+        editor.apply();
+        handler.sendEmptyMessage(0);
+        adapter.notifyDataSetChanged();
     }
 
     private static class MyHandler extends Handler {
