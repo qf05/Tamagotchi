@@ -15,7 +15,7 @@
     <item android:id="@android:id/progress">
         <clip
             android:clipOrientation="horizontal"
-            android:gravity="bottom" >
+            android:gravity="left" >
             <shape>
                 <corners android:radius="5dip" />
 
