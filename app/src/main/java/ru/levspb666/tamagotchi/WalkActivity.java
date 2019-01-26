@@ -22,6 +22,7 @@ import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.NotificationUtils;
+import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static android.view.View.TRANSLATION_X;
@@ -41,7 +42,7 @@ public class WalkActivity extends AppCompatActivity {
     private AnimatorSet animatorSet;
     private ProgressBar progressBar;
     private Button home;
-    private boolean complete = false;
+    private boolean complete;
     private int indent;
     private DataBase db;
 
@@ -52,10 +53,9 @@ public class WalkActivity extends AppCompatActivity {
 
         petView = findViewById(R.id.petWalk);
         progressBar = findViewById(R.id.walkProgressBar);
-        progressBar.setMax(10 + SELECTED_PET.getLvl() / 2);
-        if (progressBar.getProgress() >= progressBar.getMax()) {
-            progressBar.setVisibility(View.INVISIBLE);
-        }
+        progressBar.setMax(9 + SELECTED_PET.getLvl() / 2);
+        progressBar.setProgress(0);
+        complete = false;
         home = findViewById(R.id.toHomeFromWalk);
         home.setClickable(false);
         home.setAlpha(0.3f);
@@ -184,12 +184,13 @@ public class WalkActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 home.setClickable(true);
                 home.setAlpha(1f);
-                AlarmUtils.cancelAlarm(getApplicationContext(),ActionType.WALK,SELECTED_PET);
+                AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.WALK, SELECTED_PET);
                 SELECTED_PET.setNextWalk(AlarmUtils.nextWalk());
+                PetUtils.addExperience(15);
                 db.petDao().update(SELECTED_PET);
-                AlarmUtils.setAlarm(getApplicationContext(), ActionType.WALK,SELECTED_PET);
+                AlarmUtils.setAlarm(getApplicationContext(), ActionType.WALK, SELECTED_PET);
                 AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
-                NotificationUtils.notificationCancel(getApplicationContext(),ActionType.WALK,SELECTED_PET);
+                NotificationUtils.notificationCancel(getApplicationContext(), ActionType.WALK, SELECTED_PET);
             }
         }
     };

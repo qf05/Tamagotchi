@@ -27,6 +27,7 @@ import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
+import ru.levspb666.tamagotchi.utils.PetUtils;
 
 import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         if (settings.contains(PREFERENCES_SOUND_OFF)) {
             SOUND_OFF = settings.getBoolean(PREFERENCES_SOUND_OFF, false);
         }
-        AlarmUtils.checkAllAlarm(getApplicationContext(),PETS);
+        AlarmUtils.checkAllAlarm(getApplicationContext(), PETS);
         checkPet();
     }
 
@@ -130,6 +131,7 @@ public class MainActivity extends AppCompatActivity {
             walk.setClickable(false);
             eatProgressBar.setProgress(0);
             hpProgressBar.setProgress(0);
+            expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
             expProgressBar.setProgress(SELECTED_PET.getExperience());
             lvl.setText(SELECTED_PET.getLvl() + getString(R.string.lvl));
         }
@@ -154,13 +156,14 @@ public class MainActivity extends AppCompatActivity {
         walk.setClickable(true);
         eatProgressBar.setProgress(SELECTED_PET.getSatiety());
         hpProgressBar.setProgress(SELECTED_PET.getHp());
+        expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
         expProgressBar.setProgress(SELECTED_PET.getExperience());
-        lvl.setText(SELECTED_PET.getLvl() +" "+ getString(R.string.lvl));
+        lvl.setText(SELECTED_PET.getLvl() + " " + getString(R.string.lvl));
     }
 
     public void goWalk(View view) {
         if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                     getString(R.string.not_walk_if_sleep), Toast.LENGTH_LONG);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
@@ -208,6 +211,7 @@ public class MainActivity extends AppCompatActivity {
         public void onClick(View v) {
             handler.sendEmptyMessage(0);
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
+            PetUtils.addExperience(10);
             db.petDao().update(SELECTED_PET);
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
             AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
@@ -223,6 +227,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void ill(View view) {
         SELECTED_PET.setIll(false);
+        PetUtils.addExperience(11);
         db.petDao().update(SELECTED_PET);
         ill.setVisibility(View.INVISIBLE);
         ill.setClickable(false);
@@ -233,7 +238,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void eat(View view) {
         if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                     getString(R.string.not_eat_if_sleep), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
@@ -247,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 if (SELECTED_PET.getHp() > 100) {
                     SELECTED_PET.setHp(100);
                 }
+                PetUtils.addExperience(7);
                 db.petDao().update(SELECTED_PET);
                 handler.sendEmptyMessage(0);
                 notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
@@ -262,7 +268,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void sleep(View view) {
         if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                     getString(R.string.is_sleep), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
@@ -271,14 +277,15 @@ public class MainActivity extends AppCompatActivity {
                 SELECTED_PET.setSlip(true);
                 SELECTED_PET.setWakeUp(AlarmUtils.nextWakeUp());
                 SELECTED_PET.setNextSlip(AlarmUtils.nextSleep() + (SELECTED_PET.getWakeUp() - Calendar.getInstance().getTimeInMillis()));
+                PetUtils.addExperience(14);
                 db.petDao().update(SELECTED_PET);
                 AlarmUtils.setAlarm(getApplicationContext(), ActionType.WAKEUP, SELECTED_PET);
                 AlarmUtils.setAlarm(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
                 notificationCancel(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
-                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(),SELECTED_PET);
+                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
                 handler.sendEmptyMessage(0);
             } else {
-                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                         getString(R.string.not_sleep_if_ill), Toast.LENGTH_SHORT);
                 toast.setGravity(Gravity.CENTER, 0, 0);
                 toast.show();

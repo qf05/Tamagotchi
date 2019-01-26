@@ -11,6 +11,8 @@ import java.util.regex.Pattern;
 
 import ru.levspb666.tamagotchi.model.Pet;
 
+import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
+
 public class PetUtils {
 
     public static int ILL_TAKE_HP = 1;
@@ -75,4 +77,21 @@ public class PetUtils {
         }
         return pets;
     }
+
+    public static void addExperience(int add) {
+        int exp = SELECTED_PET.getExperience();
+        exp += add;
+        if (exp >= (int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6) {
+            lvlUp(exp);
+        } else {
+            SELECTED_PET.setExperience(exp);
+        }
+    }
+
+    private static void lvlUp(int exp) {
+        exp -= SELECTED_PET.getExperience();
+        SELECTED_PET.setLvl(SELECTED_PET.getLvl() + 1);
+        SELECTED_PET.setExperience(exp);
+    }
+
 }
