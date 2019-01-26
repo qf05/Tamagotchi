@@ -50,6 +50,9 @@ public class MainActivity extends AppCompatActivity {
     private Button ill;
     private Button walk;
     private ProgressBar eatProgressBar;
+    private ProgressBar hpProgressBar;
+    private ProgressBar expProgressBar;
+    private TextView lvl;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +65,9 @@ public class MainActivity extends AppCompatActivity {
         ill = findViewById(R.id.ill);
         walk = findViewById(R.id.goWalk);
         eatProgressBar = findViewById(R.id.eatProgressBar);
+        hpProgressBar = findViewById(R.id.hpProgressBar);
+        expProgressBar = findViewById(R.id.expProgressBar);
+        lvl = findViewById(R.id.lvl);
         db = DataBase.getAppDatabase(getApplicationContext());
         PETS = db.petDao().getAll();
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
@@ -121,6 +127,10 @@ public class MainActivity extends AppCompatActivity {
             shitView.setClickable(false);
             walk.setVisibility(View.INVISIBLE);
             walk.setClickable(false);
+            eatProgressBar.setProgress(0);
+            hpProgressBar.setProgress(0);
+            expProgressBar.setProgress(SELECTED_PET.getExperience());
+            lvl.setText(SELECTED_PET.getLvl() + getString(R.string.lvl));
         }
     }
 
@@ -142,6 +152,9 @@ public class MainActivity extends AppCompatActivity {
         walk.setVisibility(View.VISIBLE);
         walk.setClickable(true);
         eatProgressBar.setProgress(SELECTED_PET.getSatiety());
+        hpProgressBar.setProgress(SELECTED_PET.getHp());
+        expProgressBar.setProgress(SELECTED_PET.getExperience());
+        lvl.setText(SELECTED_PET.getLvl() +" "+ getString(R.string.lvl));
     }
 
     public void goWalk(View view) {

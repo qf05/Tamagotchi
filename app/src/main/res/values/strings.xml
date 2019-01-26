@@ -25,6 +25,7 @@
     <string name="delete_this_pets">Вы действительно хотите удалить выбранных питомцев?</string>
     <string name="delete">Удалить</string>
     <string name="not_hunger"> не голоден!</string>
+    <string name="lvl">lvl</string>
 
 
     <string-array name="pets">
