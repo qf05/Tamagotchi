@@ -21,6 +21,7 @@ import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
+import ru.levspb666.tamagotchi.utils.NotificationUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static android.view.View.TRANSLATION_X;
@@ -188,6 +189,7 @@ public class WalkActivity extends AppCompatActivity {
                 db.petDao().update(SELECTED_PET);
                 AlarmUtils.setAlarm(getApplicationContext(), ActionType.WALK,SELECTED_PET);
                 AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+                NotificationUtils.notificationCancel(getApplicationContext(),ActionType.WALK,SELECTED_PET);
             }
         }
     };

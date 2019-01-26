@@ -159,9 +159,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void goWalk(View view) {
-        if (SELECTED_PET != null) {
-            Intent intent = new Intent(MainActivity.this, WalkActivity.class);
-            startActivity(intent);
+        if (SELECTED_PET.isSlip()) {
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+                    getString(R.string.not_walk_if_sleep), Toast.LENGTH_LONG);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        } else {
+            if (SELECTED_PET != null) {
+                Intent intent = new Intent(MainActivity.this, WalkActivity.class);
+                startActivity(intent);
+            }
         }
     }
 
@@ -225,24 +232,57 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void eat(View view) {
-        if (SELECTED_PET.getSatiety() < 100) {
-            SELECTED_PET.setSatiety(SELECTED_PET.getSatiety() + ADD_EAT);
-            if (SELECTED_PET.getSatiety() > 100) {
-                SELECTED_PET.setSatiety(100);
-            }
-            SELECTED_PET.setHp(SELECTED_PET.getHp() + ADD_HP_EAT);
-            if (SELECTED_PET.getHp() > 100) {
-                SELECTED_PET.setHp(100);
-            }
-            db.petDao().update(SELECTED_PET);
-            handler.sendEmptyMessage(0);
-            notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
-            AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
-        } else {
+        if (SELECTED_PET.isSlip()) {
             Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
-                    getString(R.string.not_hunger), Toast.LENGTH_SHORT);
+                    getString(R.string.not_eat_if_sleep), Toast.LENGTH_SHORT);
             toast.setGravity(Gravity.CENTER, 0, 0);
             toast.show();
+        } else {
+            if (SELECTED_PET.getSatiety() < 100) {
+                SELECTED_PET.setSatiety(SELECTED_PET.getSatiety() + ADD_EAT);
+                if (SELECTED_PET.getSatiety() > 100) {
+                    SELECTED_PET.setSatiety(100);
+                }
+                SELECTED_PET.setHp(SELECTED_PET.getHp() + ADD_HP_EAT);
+                if (SELECTED_PET.getHp() > 100) {
+                    SELECTED_PET.setHp(100);
+                }
+                db.petDao().update(SELECTED_PET);
+                handler.sendEmptyMessage(0);
+                notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
+                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+            } else {
+                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                        getString(R.string.not_hunger), Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
+        }
+    }
+
+    public void sleep(View view) {
+        if (SELECTED_PET.isSlip()) {
+            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+                    getString(R.string.is_sleep), Toast.LENGTH_SHORT);
+            toast.setGravity(Gravity.CENTER, 0, 0);
+            toast.show();
+        } else {
+            if (!SELECTED_PET.isIll()) {
+                SELECTED_PET.setSlip(true);
+                SELECTED_PET.setWakeUp(AlarmUtils.nextWakeUp());
+                SELECTED_PET.setNextSlip(AlarmUtils.nextSleep() + (SELECTED_PET.getWakeUp() - Calendar.getInstance().getTimeInMillis()));
+                db.petDao().update(SELECTED_PET);
+                AlarmUtils.setAlarm(getApplicationContext(), ActionType.WAKEUP, SELECTED_PET);
+                AlarmUtils.setAlarm(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
+                notificationCancel(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
+                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(),SELECTED_PET);
+                handler.sendEmptyMessage(0);
+            } else {
+                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() +" "+
+                        getString(R.string.not_sleep_if_ill), Toast.LENGTH_SHORT);
+                toast.setGravity(Gravity.CENTER, 0, 0);
+                toast.show();
+            }
         }
     }
 

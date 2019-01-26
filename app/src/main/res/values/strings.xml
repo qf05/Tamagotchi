@@ -26,6 +26,10 @@
     <string name="delete">Удалить</string>
     <string name="not_hunger"> не голоден!</string>
     <string name="lvl">lvl</string>
+    <string name="not_eat_if_sleep">не может есть пока спит!</string>
+    <string name="is_sleep">уже спит!</string>
+    <string name="not_sleep_if_ill">не может спать пока болеет!</string>
+    <string name="not_walk_if_sleep">не может гулять пока спит!</string>
 
 
     <string-array name="pets">

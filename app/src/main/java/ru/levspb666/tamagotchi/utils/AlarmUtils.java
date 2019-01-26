@@ -24,40 +24,55 @@ public class AlarmUtils {
     private static final int ILL_TIME_REPEAD = 1;
     private static final int EAT_TIME = 1;
     private static final int WALK_TIME_ADD = 1;
-    private static final int WALK_RANDOM_TIME =1;
+    private static final int WALK_RANDOM_TIME = 1;
+    private static final int SLEEP_TIME_ADD = 1;
+    private static final int SLEEP_RANDOM_TIME = 1;
+    private static final int WAKE_UP_TIME_ADD = 1;
+    private static final int WAKE_UP_RANDOM_TIME = 1;
 
     public static long nextShit() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.MINUTE, (int) (SHIT_TIME_ADD + (Math.random()*SHIT_RANDOM_TIME)));
+        calendar.add(Calendar.MINUTE, (int) (SHIT_TIME_ADD + (Math.random() * SHIT_RANDOM_TIME)));
         return calendar.getTimeInMillis();
     }
 
     public static long nextWalk() {
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.SECOND, (int) (WALK_TIME_ADD + (Math.random() * WALK_RANDOM_TIME)));
+        calendar.add(Calendar.MINUTE, (int) (WALK_TIME_ADD + (Math.random() * WALK_RANDOM_TIME)));
         return calendar.getTimeInMillis();
+    }
 
+    public static long nextSleep() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, (int) (SLEEP_TIME_ADD + (Math.random() * SLEEP_RANDOM_TIME)));
+        return calendar.getTimeInMillis();
+    }
+
+    public static long nextWakeUp() {
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MINUTE, (int) (WAKE_UP_TIME_ADD+ (Math.random() * WAKE_UP_RANDOM_TIME)));
+        return calendar.getTimeInMillis();
     }
 
 
-// https://startandroid.ru/ru/uroki/vse-uroki-spiskom/204-urok-119-pendingintent-flagi-requestcode-alarmmanager.html
-        public static void setAlarm(Context context, ActionType action, Pet pet) {
-            AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
-            Intent intent = new Intent(
-                    action.toString(),
-                    Uri.parse("pet_id:" + pet.getId()),
-                    context.getApplicationContext(),
-                    ActionReceiver.class);
-            PendingIntent pendingIntent = PendingIntent.getBroadcast(
-                    context.getApplicationContext(),
-                    (int) pet.getId(),
-                    intent,
-                    //  https://stackoverflow.com/questions/14485368/delete-alarm-from-alarmmanager-using-cancel-android
-                    FLAG_UPDATE_CURRENT);
-            if (alarmMgr != null) {
-                alarmMgr.set(AlarmManager.RTC_WAKEUP, time(ActionType.SHIT, pet), pendingIntent);
-            }
+    // https://startandroid.ru/ru/uroki/vse-uroki-spiskom/204-urok-119-pendingintent-flagi-requestcode-alarmmanager.html
+    public static void setAlarm(Context context, ActionType action, Pet pet) {
+        AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
+        Intent intent = new Intent(
+                action.toString(),
+                Uri.parse("pet_id:" + pet.getId()),
+                context.getApplicationContext(),
+                ActionReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                context.getApplicationContext(),
+                (int) pet.getId(),
+                intent,
+                //  https://stackoverflow.com/questions/14485368/delete-alarm-from-alarmmanager-using-cancel-android
+                FLAG_UPDATE_CURRENT);
+        if (alarmMgr != null) {
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, time(ActionType.SHIT, pet), pendingIntent);
         }
+    }
 
     public static void setRepeatAlarm(Context context, ActionType action, Pet pet) {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
@@ -71,7 +86,7 @@ public class AlarmUtils {
                 intent,
                 FLAG_UPDATE_CURRENT);
         if (alarmMgr != null) {
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, time(ActionType.ILL,pet), repeatTime(ActionType.ILL), pendingIntent);
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, time(ActionType.ILL, pet), repeatTime(ActionType.ILL), pendingIntent);
         }
     }
 
@@ -79,7 +94,9 @@ public class AlarmUtils {
         cancelAlarm(context.getApplicationContext(), ActionType.ILL, pet);
         cancelAlarm(context.getApplicationContext(), ActionType.SHIT, pet);
         cancelAlarm(context.getApplicationContext(), ActionType.EAT, pet);
-        cancelAlarm(context.getApplicationContext(),ActionType.WALK, pet);
+        cancelAlarm(context.getApplicationContext(), ActionType.WALK, pet);
+        cancelAlarm(context.getApplicationContext(), ActionType.SLEEP, pet);
+        cancelAlarm(context.getApplicationContext(), ActionType.WAKEUP, pet);
     }
 
     public static void cancelAlarm(Context context, ActionType action, Pet pet) {
@@ -116,27 +133,41 @@ public class AlarmUtils {
     }
 
     public static void checkAllAlarmPet(Context context, Pet pet) {
-        if (pet.isIll() && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
-            setRepeatAlarm(context.getApplicationContext(), ActionType.ILL, pet);
-        }
-        if (checkAlarm(context.getApplicationContext(), ActionType.EAT, pet)) {
-            setRepeatAlarm(context.getApplicationContext(), ActionType.EAT, pet);
-        }
-        if (pet.getNextShit()>Calendar.getInstance().getTimeInMillis()
-                && checkAlarm(context.getApplicationContext(), ActionType.SHIT, pet)) {
-            setAlarm(context.getApplicationContext(), ActionType.SHIT, pet);
-        }
-        if (pet.getNextShit()<=Calendar.getInstance().getTimeInMillis()
-                && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
-            setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
-        }
-        if (pet.getNextWalk() > Calendar.getInstance().getTimeInMillis()
-                && checkAlarm(context.getApplicationContext(), ActionType.WALK, pet)) {
-            setAlarm(context.getApplicationContext(), ActionType.WALK, pet);
-        }
-        if (pet.getNextWalk() <= Calendar.getInstance().getTimeInMillis()
-                && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
-            setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+        if (pet.isLive()) {
+            if (pet.isIll() && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
+                setRepeatAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+            }
+            if (checkAlarm(context.getApplicationContext(), ActionType.EAT, pet)) {
+                setRepeatAlarm(context.getApplicationContext(), ActionType.EAT, pet);
+            }
+            if (pet.getNextShit() > Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.SHIT, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.SHIT, pet);
+            }
+            if (pet.getNextShit() <= Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+            }
+            if (pet.getNextWalk() > Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.WALK, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.WALK, pet);
+            }
+            if (pet.getNextWalk() <= Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+            }
+
+            if (!pet.isSlip() && pet.getNextSlip() > Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.SLEEP, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.SLEEP, pet);
+            }
+            if (!pet.isSlip() && pet.getNextSlip() <= Calendar.getInstance().getTimeInMillis()
+                    && checkAlarm(context.getApplicationContext(), ActionType.ILL, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.ILL, pet);
+            }
+            if (pet.isSlip() && checkAlarm(context.getApplicationContext(), ActionType.WAKEUP, pet)) {
+                setAlarm(context.getApplicationContext(), ActionType.WAKEUP, pet);
+            }
         }
     }
 
@@ -153,7 +184,8 @@ public class AlarmUtils {
         return !pet.isIll()
                 && pet.getNextShit() > now
                 && pet.getSatiety() > 1
-                && pet.getNextWalk() > now;
+                && pet.getNextWalk() > now
+                && pet.getNextSlip() > now;
     }
 
     public static void cancelAlarmIllWithCheck(Context context, Pet pet) {

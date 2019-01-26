@@ -131,16 +131,6 @@
         </LinearLayout>
     </LinearLayout>
 
-    <Button
-        android:id="@+id/goWalk"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
-        android:layout_alignParentEnd="true"
-        android:layout_centerVertical="true"
-        android:layout_margin="10dp"
-        android:onClick="goWalk"
-        android:background="@drawable/walk" />
-
     <ImageView
         android:id="@+id/shit"
         android:layout_width="90dp"
@@ -166,9 +156,31 @@
         android:layout_width="60dp"
         android:layout_height="60dp"
         android:layout_alignParentEnd="true"
-        android:layout_below="@+id/goWalk"
+        android:layout_below="@+id/parametersOfPet"
         android:layout_margin="10dp"
         android:onClick="eat"
         android:background="@drawable/eat"
+        />
+
+    <Button
+        android:id="@+id/sleep"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:onClick="sleep"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/eat"
+        android:layout_marginEnd="10dp"
+        android:background="@drawable/sleep"
+        />
+
+    <Button
+        android:id="@+id/goWalk"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentEnd="true"
+        android:layout_below="@+id/sleep"
+        android:layout_margin="10dp"
+        android:onClick="goWalk"
+        android:background="@drawable/walk"
         />
 </RelativeLayout>
