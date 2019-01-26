@@ -10,6 +10,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -25,14 +26,17 @@ import ru.levspb666.tamagotchi.utils.ViewHelper;
 import static ru.levspb666.tamagotchi.MainActivity.APP_PREFERENCES;
 import static ru.levspb666.tamagotchi.MainActivity.PETS;
 import static ru.levspb666.tamagotchi.MainActivity.PREFERENCES_SELECTED_PET;
+import static ru.levspb666.tamagotchi.MainActivity.PREFERENCES_SOUND_OFF;
 import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
+import static ru.levspb666.tamagotchi.MainActivity.SOUND_OFF;
 
 public class SettingsActivity extends AppCompatActivity {
-    private Spinner spinnerCreate;
+
     private EditText inputName;
     private AlertDialog dialog;
     private DataBase db;
     private SharedPreferences settings;
+    private CheckBox sound;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -40,6 +44,8 @@ public class SettingsActivity extends AppCompatActivity {
         setContentView(R.layout.settings_activity);
         db = DataBase.getAppDatabase(getApplicationContext());
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
+        sound = findViewById(R.id.soundCheckbox);
+        sound.setChecked(!SOUND_OFF);
     }
 
     public void createPet(View view) {
@@ -52,12 +58,6 @@ public class SettingsActivity extends AppCompatActivity {
             dialog.cancel();
         }
     };
-
-    public void changePet(View view) {
-        Intent intent = new Intent(SettingsActivity.this, ChangePetActivity.class);
-        startActivity(intent);
-        finish();
-    }
 
     public void deletePet(View view) {
         Intent intent = new Intent(SettingsActivity.this, DeletePetActivity.class);
@@ -99,5 +99,19 @@ public class SettingsActivity extends AppCompatActivity {
         Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
         startActivity(intent);
         finish();
+    }
+
+    public void notification(View view) {
+    }
+
+    public void history(View view) {
+    }
+
+    public void sound(View view) {
+        SOUND_OFF = !SOUND_OFF;
+        sound.setChecked(!SOUND_OFF);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putBoolean(PREFERENCES_SOUND_OFF, SOUND_OFF);
+        editor.apply();
     }
 }

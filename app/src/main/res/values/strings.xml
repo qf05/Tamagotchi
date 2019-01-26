@@ -30,6 +30,7 @@
     <string name="is_sleep">уже спит!</string>
     <string name="not_sleep_if_ill">не может спать пока болеет!</string>
     <string name="not_walk_if_sleep">не может гулять пока спит!</string>
+    <string name="notification_settings">уведомления</string>
 
 
     <string-array name="pets">

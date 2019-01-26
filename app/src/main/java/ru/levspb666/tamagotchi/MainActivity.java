@@ -41,7 +41,7 @@ import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_HP_EAT;
 
 public class MainActivity extends AppCompatActivity implements QuickChangePetRVAdapter.ItemClickListener {
 
-    private static final String PREFERENCES_SOUND_OFF = "SOUND_OFF";
+    public static final String PREFERENCES_SOUND_OFF = "SOUND_OFF";
     public static final String APP_PREFERENCES = "PREFERENCES";
     public static final String PREFERENCES_SELECTED_PET = "SELECTED";
     private SharedPreferences settings;
@@ -222,37 +222,6 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
         }
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu, menu);
-        soundCheckbox = menu.findItem(R.id.offSound);
-        soundCheckbox.setChecked(!SOUND_OFF);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        switch (id) {
-            case R.id.petSettings:
-                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-                startActivity(intent);
-                return true;
-            case R.id.alarmSettings:
-
-                return true;
-            case R.id.showHistory:
-
-                return true;
-            case R.id.offSound:
-                SOUND_OFF = !SOUND_OFF;
-                soundCheckbox.setChecked(!SOUND_OFF);
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-
     private View.OnClickListener shitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
@@ -361,6 +330,11 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
         editor.apply();
         handler.sendEmptyMessage(0);
         adapter.notifyDataSetChanged();
+    }
+
+    public void toSettings(View view) {
+        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+        startActivity(intent);
     }
 
     private static class MyHandler extends Handler {

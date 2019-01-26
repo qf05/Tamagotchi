@@ -218,4 +218,16 @@
         android:layout_above="@+id/yourPets"
         android:layout_marginStart="20dp"
         android:layout_marginBottom="5dp" />
+
+    <Button
+        android:id="@+id/settings"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/parametersOfPet"
+        android:layout_marginTop="10dp"
+        android:layout_marginStart="10dp"
+        android:onClick="toSettings"
+        android:background="@drawable/settings"
+        />
 </RelativeLayout>

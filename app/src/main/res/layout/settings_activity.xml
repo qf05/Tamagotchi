@@ -34,6 +34,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:onClick="createPet"
+                android:background="@drawable/button"
+                android:textStyle="bold"
+                android:textSize="15dp"
                 android:text="@string/create_new_pet" />
 
         </RelativeLayout>
@@ -56,8 +59,11 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:onClick="changePet"
-                android:text="@string/change_pet" />
+                android:onClick="deletePet"
+                android:background="@drawable/button"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:text="@string/delete_pet" />
         </RelativeLayout>
 
         <RelativeLayout
@@ -78,6 +84,9 @@
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
                 android:onClick="changeNamePet"
+                android:background="@drawable/button"
+                android:textStyle="bold"
+                android:textSize="15dp"
                 android:text="@string/change_name" />
         </RelativeLayout>
 
@@ -91,19 +100,77 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:scaleType="fitXY"
-                android:src="@drawable/shell_05" />
+                android:src="@drawable/shell_04" />
 
             <Button
                 android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_alignParentBottom="true"
                 android:layout_centerHorizontal="true"
-                android:onClick="deletePet"
-                android:text="@string/delete_pet" />
+                android:onClick="notification"
+                android:background="@drawable/button"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:text="@string/notification" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/shell_06"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/shell_04" />
+
+            <Button
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:onClick="history"
+                android:background="@drawable/button"
+                android:textStyle="bold"
+                android:textSize="15dp"
+                android:text="@string/history" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="2">
+
+            <ImageView
+                android:id="@+id/shell_07"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:scaleType="fitXY"
+                android:src="@drawable/shell_05" />
+
+            <CheckBox
+                android:id="@+id/soundCheckbox"
+                android:layout_width="200dp"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_centerHorizontal="true"
+                android:textStyle="bold"
+                android:layout_marginBottom="3dp"
+                android:paddingStart="20dp"
+                android:textSize="20dp"
+                android:onClick="sound"
+                android:textColor="#000"
+                android:background="@drawable/button"
+                android:text="@string/sound"
+                android:button="@drawable/checkbox_selector"/>
+
+
         </RelativeLayout>
 
         <ImageView
-            android:id="@+id/shell_06"
+            android:id="@+id/shell_08"
             android:layout_width="match_parent"
             android:layout_height="0dp"
             android:layout_weight="1"
@@ -114,10 +181,10 @@
     <Button
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_marginEnd="10dp"
-        android:layout_marginBottom="20dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="10dp"
         android:background="@drawable/home"
         android:onClick="goHome" />
 </RelativeLayout>
