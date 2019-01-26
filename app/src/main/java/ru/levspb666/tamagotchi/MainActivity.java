@@ -14,6 +14,7 @@ import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -25,6 +26,7 @@ import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Objects;
 
 import ru.levspb666.tamagotchi.adapters.QuickChangePetRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
@@ -69,6 +71,8 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        MainActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         petName = findViewById(R.id.petName);
         petView = findViewById(R.id.petView);
         shitView = findViewById(R.id.shit);

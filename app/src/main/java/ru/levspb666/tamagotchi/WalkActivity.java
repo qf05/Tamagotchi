@@ -13,9 +13,12 @@ import android.util.Log;
 import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+
+import java.util.Objects;
 
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
@@ -50,6 +53,8 @@ public class WalkActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.walk_activity);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        WalkActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         petView = findViewById(R.id.petWalk);
         progressBar = findViewById(R.id.walkProgressBar);

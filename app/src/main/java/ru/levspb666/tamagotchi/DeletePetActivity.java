@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
 import ru.levspb666.tamagotchi.adapters.DeleteRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
@@ -45,6 +47,8 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.delete_pet_activity);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        DeletePetActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
         RecyclerView rv = findViewById(R.id.delete_rv);
         rv.setHasFixedSize(true);
@@ -76,23 +80,6 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         adapter = new DeleteRVAdapter(this, pets);
         adapter.setClickListener(DeletePetActivity.this);
         rv.setAdapter(adapter);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(android.view.Menu menu) {
-        getMenuInflater().inflate(R.menu.delete, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.delete:
-                sureDialog();
-                return true;
-            default:
-                return super.onOptionsItemSelected(item);
-        }
     }
 
     private void sureDialog() {
@@ -155,10 +142,8 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         }
     }
 
-    public void goHome(View view) {
-        Intent intent = new Intent(DeletePetActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+    public void delete(View view) {
+        sureDialog();
     }
 
     public void goBack(View view) {

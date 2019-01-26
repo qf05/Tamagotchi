@@ -7,25 +7,22 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 
+import java.util.Objects;
+
 import ru.levspb666.tamagotchi.db.DataBase;
-import ru.levspb666.tamagotchi.enums.PetsType;
-import ru.levspb666.tamagotchi.model.Pet;
-import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static ru.levspb666.tamagotchi.MainActivity.APP_PREFERENCES;
 import static ru.levspb666.tamagotchi.MainActivity.PETS;
-import static ru.levspb666.tamagotchi.MainActivity.PREFERENCES_SELECTED_PET;
 import static ru.levspb666.tamagotchi.MainActivity.PREFERENCES_SOUND_OFF;
 import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
 import static ru.levspb666.tamagotchi.MainActivity.SOUND_OFF;
@@ -42,6 +39,8 @@ public class SettingsActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.settings_activity);
+        Objects.requireNonNull(getSupportActionBar()).hide();
+        SettingsActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
         db = DataBase.getAppDatabase(getApplicationContext());
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         sound = findViewById(R.id.soundCheckbox);
@@ -49,7 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void createPet(View view) {
-       ViewHelper.createDialog(this,this);
+        ViewHelper.createDialog(this, this);
     }
 
     View.OnClickListener cancelListener = new View.OnClickListener() {

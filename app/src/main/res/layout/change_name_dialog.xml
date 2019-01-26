@@ -60,7 +60,9 @@
                 android:id="@+id/cancelChangeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:text="@string/cancel" />
 
@@ -68,7 +70,9 @@
                 android:id="@+id/okChangeName"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_margin="20dp"
+                android:layout_marginStart="20dp"
+                android:layout_marginEnd="20dp"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
                 android:text="@string/ok" />
         </LinearLayout>

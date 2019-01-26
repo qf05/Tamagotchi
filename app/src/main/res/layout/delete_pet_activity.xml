@@ -82,8 +82,8 @@
         android:layout_alignParentBottom="true"
         android:layout_marginBottom="20dp"
         android:layout_marginEnd="10dp"
-        android:onClick="goHome"
-        android:background="@drawable/home" />
+        android:onClick="delete"
+        android:background="@drawable/del" />
 
     <Button
         android:layout_width="50dp"
