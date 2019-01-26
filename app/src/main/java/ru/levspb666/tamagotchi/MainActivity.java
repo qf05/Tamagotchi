@@ -33,6 +33,7 @@ import ru.levspb666.tamagotchi.enums.PetsType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
+import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
@@ -133,6 +134,9 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             SharedPreferences.Editor editor = settings.edit();
             editor.putLong(PREFERENCES_SELECTED_PET, SELECTED_PET.getId());
             editor.apply();
+        }
+        if (PETS.size()==0){
+            ViewHelper.createDialog(this,this);
         }
 
         if (SELECTED_PET != null) {
