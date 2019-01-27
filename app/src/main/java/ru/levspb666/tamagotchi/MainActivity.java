@@ -3,6 +3,7 @@ package ru.levspb666.tamagotchi;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -120,7 +121,12 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
         rv = findViewById(R.id.new_change_rv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        LinearLayoutManager llm;
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            llm = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, false);
+        }else {
+            llm = new LinearLayoutManager(MainActivity.this, LinearLayoutManager.HORIZONTAL, true);
+        }
         rv.setLayoutManager(llm);
         DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
                 llm.getOrientation());
@@ -182,16 +188,23 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
     private void setViewPet() {
         PETS = db.petDao().getAll();
         int height = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
+        double displayRate;
         if (SELECTED_PET.isLive()) {
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
                     if (SELECTED_PET.getLvl() < 20) {
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            displayRate = 3;
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }else {
+                            displayRate = 2.5;
+                            petView.setScaleType(ImageView.ScaleType.FIT_END);
+                        }
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, height / 3);
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                         layoutParams.setMargins(0, 0, 0, height / 15);
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                         petView.setLayoutParams(layoutParams);
-                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.cat_small_sleep);
                         } else {
@@ -204,12 +217,21 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
 
                     } else {
                         if (SELECTED_PET.getLvl() < 50) {
+                            int marginRight;
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 2.5;
+                                marginRight =0;
+                                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }else {
+                                displayRate = 2;
+                                marginRight= height/10;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2.5));
-                            layoutParams.setMargins(0, 0, 0, height / 15);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
+                            layoutParams.setMargins(0, 0, marginRight, height / 15);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cat_norm_sleep);
                             } else {
@@ -220,12 +242,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                                 }
                             }
                         } else {
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 2;
+                                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }else {
+                                displayRate = 1.8;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, height / 2);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                             layoutParams.setMargins(height / 10, 0, 0, height / 30);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cat_old_sleep);
                             } else {
@@ -240,12 +268,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                     break;
                 case DOG:
                     if (SELECTED_PET.getLvl() < 20) {
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            displayRate = 3;
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }else {
+                            displayRate = 2.5;
+                            petView.setScaleType(ImageView.ScaleType.FIT_END);
+                        }
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, height / 3);
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                         layoutParams.setMargins(0, 0, 0, height / 10);
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                         petView.setLayoutParams(layoutParams);
-                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.dog_small_sleep);
                         } else {
@@ -257,12 +291,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                         }
                     } else {
                         if (SELECTED_PET.getLvl() < 50) {
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 2;
+                                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }else {
+                                displayRate = 1.7;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2));
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                             layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.dog_norm_sleep);
                             } else {
@@ -273,12 +313,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                                 }
                             }
                         } else {
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 1.8;
+                                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }else {
+                                displayRate = 1.6;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.8));
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                             layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.dog_old_sleep);
                             } else {
@@ -293,12 +339,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                     break;
                 case CTHULHU:
                     if (SELECTED_PET.getLvl() < 20) {
+                        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                            displayRate = 3;
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        }else {
+                            displayRate = 2.5;
+                            petView.setScaleType(ImageView.ScaleType.FIT_END);
+                        }
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 3));
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                         layoutParams.setMargins(0, 0, 0, height / 10);
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                         petView.setLayoutParams(layoutParams);
-                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                         if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.cthulhu_small_sleep);
                         } else {
@@ -310,12 +362,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                         }
                     } else {
                         if (SELECTED_PET.getLvl() < 50) {
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 2.5;
+                                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            }else {
+                                displayRate = 2;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2.5));
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
                             layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cthulhu_norm_sleep);
                             } else {
@@ -326,12 +384,24 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                                 }
                             }
                         } else {
+                            int marginBottom;
+                            int marginLeft;
+                            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                displayRate = 1.5;
+                                marginBottom = 10;
+                                marginLeft = 50;
+                                petView.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                            }else {
+                                displayRate = 1;
+                                marginBottom = 30;
+                                marginLeft = 10;
+                                petView.setScaleType(ImageView.ScaleType.FIT_END);
+                            }
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.5));
-                            layoutParams.setMargins(0, 0, 0, height / 10);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
+                            layoutParams.setMargins(-height/marginLeft, 0, 0, height / marginBottom);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
-                            petView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                             if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cthulhu_old_sleep);
                             } else {
@@ -347,12 +417,18 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             }
             changeVisibility();
         } else {
+            if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                displayRate = 1.8;
+                petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            }else {
+                displayRate = 1.6;
+                petView.setScaleType(ImageView.ScaleType.FIT_END);
+            }
             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.8));
+                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / displayRate));
             layoutParams.setMargins(0, 0, 0, height / 15);
             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
             petView.setLayoutParams(layoutParams);
-            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             petView.setImageResource(R.drawable.die);
             eatProgressBar.setProgress(1);
             ill.setVisibility(View.INVISIBLE);

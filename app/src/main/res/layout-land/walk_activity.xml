@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:ads="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/layoutWalk"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".WalkActivity">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:scaleType="centerCrop"
+        android:src="@drawable/fon_walk" />
+
+    <ImageView
+        android:id="@+id/petWalk"
+        android:layout_width="70dp"
+        android:layout_height="70dp" />
+
+    <Button
+        android:id="@+id/toHomeFromWalk"
+        android:onClick="goHome"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/home" />
+
+    <ProgressBar
+        android:id="@+id/walkProgressBar"
+        android:layout_margin="20dp"
+        android:progressDrawable="@drawable/progress"
+        style="@android:style/Widget.ProgressBar.Horizontal"
+        android:layout_width="match_parent"
+        android:layout_height="20dp"
+        android:indeterminate="false"
+        android:max="9"
+        android:progress="0" />
+
+    <com.google.android.gms.ads.AdView
+        android:id="@+id/adView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_toEndOf="@+id/toHomeFromWalk"
+        android:layout_alignParentBottom="true"
+        ads:adSize="BANNER"
+        ads:adUnitId="@string/banner_ad_unit_id">
+    </com.google.android.gms.ads.AdView>
+</RelativeLayout>

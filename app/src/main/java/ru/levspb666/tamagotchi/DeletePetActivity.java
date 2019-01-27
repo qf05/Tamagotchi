@@ -2,10 +2,12 @@ package ru.levspb666.tamagotchi;
 
 import android.app.AlertDialog;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.DividerItemDecoration;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -58,11 +60,21 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         delete = findViewById(R.id.delPet);
         RecyclerView rv = findViewById(R.id.delete_rv);
         rv.setHasFixedSize(true);
-        LinearLayoutManager llm = new LinearLayoutManager(DeletePetActivity.this);
-        rv.setLayoutManager(llm);
-        DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
-                llm.getOrientation());
-        rv.addItemDecoration(dividerItemDecoration);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            LinearLayoutManager llm = new LinearLayoutManager(DeletePetActivity.this);
+            rv.setLayoutManager(llm);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
+                    llm.getOrientation());
+            rv.addItemDecoration(dividerItemDecoration);
+        }else {
+            GridLayoutManager glm = new GridLayoutManager(DeletePetActivity.this,2);
+            rv.setLayoutManager(glm);
+            DividerItemDecoration dividerItemDecoration = new DividerItemDecoration(rv.getContext(),
+                    glm.getOrientation());
+            rv.addItemDecoration(dividerItemDecoration);
+        }
+
+
         db = DataBase.getAppDatabase(getApplicationContext());
         pets = db.petDao().getAll();
         Spinner sortSpinner = findViewById(R.id.deleteSort);

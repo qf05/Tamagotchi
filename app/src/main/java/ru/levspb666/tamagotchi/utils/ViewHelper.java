@@ -54,10 +54,12 @@ public class ViewHelper {
         dialog.setOnShowListener(new DialogInterface.OnShowListener() {
             @Override
             public void onShow(DialogInterface di) {
-                final int i = Objects.requireNonNull(dialog.getWindow()).getDecorView().getHeight();
+                final int height = Objects.requireNonNull(dialog.getWindow()).getDecorView().getHeight();
+                final int width = Objects.requireNonNull(dialog.getWindow()).getDecorView().getWidth();
+
                 RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(
-                        RelativeLayout.LayoutParams.MATCH_PARENT,
-                        i - 50
+                        width + 50,
+                        height - 50
                 );
                 fon.setLayoutParams(params);
             }
