@@ -20,6 +20,9 @@ import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.db.DataBase;
@@ -50,6 +53,8 @@ public class WalkActivity extends AppCompatActivity {
     private boolean complete;
     private int indent;
     private DataBase db;
+    private AdView mAdView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -87,6 +92,12 @@ public class WalkActivity extends AppCompatActivity {
         }
         petView.setOnClickListener(onClickListener);
         db = DataBase.getAppDatabase(getApplicationContext());
+        mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("sony-d6633-CB5A25TGZ3")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
         getSize();
     }
 

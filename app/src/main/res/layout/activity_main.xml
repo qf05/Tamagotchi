@@ -275,4 +275,22 @@
         android:layout_alignBottom="@+id/goWalk"
         android:src="@drawable/red"/>
 
+    <ProgressBar
+        android:id="@+id/bonusLoadIndicator"
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:indeterminate="true"
+        android:layout_below="@+id/settings"/>
+
+    <Button
+        android:id="@+id/bonus"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/settings"
+        android:layout_margin="10dp"
+        android:onClick="bonusExperience"
+        android:background="@drawable/star"
+        />
+
 </RelativeLayout>

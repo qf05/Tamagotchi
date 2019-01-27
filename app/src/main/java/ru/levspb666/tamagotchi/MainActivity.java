@@ -24,6 +24,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.reward.RewardItem;
+import com.google.android.gms.ads.reward.RewardedVideoAd;
+import com.google.android.gms.ads.reward.RewardedVideoAdListener;
+
 import java.lang.ref.WeakReference;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -44,7 +50,7 @@ import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_HP_EAT;
 
-public class MainActivity extends AppCompatActivity implements QuickChangePetRVAdapter.ItemClickListener {
+public class MainActivity extends AppCompatActivity implements RewardedVideoAdListener, QuickChangePetRVAdapter.ItemClickListener {
 
     public static final String PREFERENCES_SOUND_OFF = "SOUND_OFF";
     public static final String APP_PREFERENCES = "PREFERENCES";
@@ -75,6 +81,8 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     private Button eat;
     private Button sleep;
     private Button settingsButton;
+    private RewardedVideoAd mRewardedVideoAd;
+    private ProgressBar bonusLoadIndicator;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -131,6 +139,12 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
                 handler.sendEmptyMessage(0);
             }
         });
+
+        MobileAds.initialize(this, "ca-app-pub-3940256099942544/5224354917");
+        mRewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this);
+        mRewardedVideoAd.setRewardedVideoAdListener(this);
+        bonusLoadIndicator = findViewById(R.id.bonusLoadIndicator);
+        bonusLoadIndicator.setVisibility(View.INVISIBLE);
         checkPet();
     }
 
@@ -632,6 +646,57 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             }
         });
         settingsButton.startAnimation(animation);
+    }
+
+    public void bonusExperience(View view) {
+        bonusLoadIndicator.setVisibility(View.VISIBLE);
+        mRewardedVideoAd.loadAd("ca-app-pub-3940256099942544/5224354917",
+                new AdRequest.Builder().build());
+    }
+
+    @Override
+    public void onRewardedVideoAdLoaded() {
+        if (mRewardedVideoAd.isLoaded()) {
+            mRewardedVideoAd.show();
+        }
+    }
+    @Override
+    public void onRewardedVideoAdOpened() {
+        bonusLoadIndicator.setVisibility(View.INVISIBLE);
+    }
+    @Override
+    public void onRewardedVideoStarted() {
+    }
+    @Override
+    public void onRewardedVideoAdClosed() {
+    }
+    @Override
+    public void onRewarded(RewardItem rewardItem) {
+        int bonus;
+        if (SELECTED_PET.getLvl()<20){
+            bonus = 100;
+        }else {
+            if (SELECTED_PET.getLvl()<50){
+                bonus = 200;
+            }else {
+                bonus = 500;
+            }
+        }
+        PetUtils.addExperience(bonus, getApplicationContext());
+        db.petDao().update(SELECTED_PET);
+        handler.sendEmptyMessage(0);
+        Toast.makeText(this, "Получено "+bonus+ " опыта.", Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onRewardedVideoAdLeftApplication() {
+    }
+    @Override
+    public void onRewardedVideoAdFailedToLoad(int i) {
+        bonusLoadIndicator.setVisibility(View.INVISIBLE);
+        Toast.makeText(this, R.string.error_loading, Toast.LENGTH_SHORT).show();
+    }
+    @Override
+    public void onRewardedVideoCompleted() {
     }
 
     private static class MyHandler extends Handler {

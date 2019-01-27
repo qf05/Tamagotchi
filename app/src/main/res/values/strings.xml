@@ -40,6 +40,8 @@
     <string name="if_pet_wake_up">Уведомления что питомец проснулся</string>
     <string name="not_notification">Отключить все уведомления</string>
 
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="error_loading">Ошибка загрузки видео</string>
 
     <string-array name="pets">
         <item>Кошка</item>
