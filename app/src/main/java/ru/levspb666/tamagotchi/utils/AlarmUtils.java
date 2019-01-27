@@ -70,7 +70,7 @@ public class AlarmUtils {
                 //  https://stackoverflow.com/questions/14485368/delete-alarm-from-alarmmanager-using-cancel-android
                 FLAG_UPDATE_CURRENT);
         if (alarmMgr != null) {
-            alarmMgr.set(AlarmManager.RTC_WAKEUP, time(ActionType.SHIT, pet), pendingIntent);
+            alarmMgr.set(AlarmManager.RTC_WAKEUP, time(action, pet), pendingIntent);
         }
     }
 
@@ -86,7 +86,7 @@ public class AlarmUtils {
                 intent,
                 FLAG_UPDATE_CURRENT);
         if (alarmMgr != null) {
-            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, time(ActionType.ILL, pet), repeatTime(ActionType.ILL), pendingIntent);
+            alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, time(action, pet), repeatTime(action), pendingIntent);
         }
     }
 
@@ -103,10 +103,10 @@ public class AlarmUtils {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(
                 action.toString(),
-                null,
+                Uri.parse("pet_id:" + pet.getId()),
                 context.getApplicationContext(),
                 ActionReceiver.class);
-        intent.setData(Uri.parse("pet_id:" + pet.getId()));
+//        intent.setData(Uri.parse("pet_id:" + pet.getId()));
         PendingIntent pendingIntent = PendingIntent.getBroadcast(
                 context.getApplicationContext(),
                 (int) pet.getId(),

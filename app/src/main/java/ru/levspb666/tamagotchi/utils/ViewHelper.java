@@ -97,6 +97,8 @@ public class ViewHelper {
                     editor.apply();
                     if (activity.getLocalClassName().equalsIgnoreCase("MainActivity")) {
                         MainActivity.handler.sendEmptyMessage(0);
+                    }else {
+                        activity.finish();
                     }
                     dialog.cancel();
 
@@ -140,6 +142,7 @@ public class ViewHelper {
 
     public static void playClick(Context context, ActionType action){
         if (!SOUND_OFF) {
+            context = context.getApplicationContext();
             AudioAttributes attributes = new AudioAttributes.Builder()
                     .setUsage(AudioAttributes.USAGE_GAME)
                     .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
@@ -165,7 +168,7 @@ public class ViewHelper {
                     soundPool.load(context, R.raw.cure, 1);
                     break;
                 case SLEEP:
-                    soundPool.load(context, R.raw.sleep, 1);
+                    soundPool.load(context, R.raw.sleep, 2);
                     break;
                 case LVLUP:
                     soundPool.load(context, R.raw.lvl_up, 1);

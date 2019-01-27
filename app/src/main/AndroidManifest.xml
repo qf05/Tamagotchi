@@ -11,7 +11,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
-        <activity android:name=".MainActivity"
+        <activity
+            android:name=".MainActivity"
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -20,14 +21,16 @@
             </intent-filter>
         </activity>
         <activity android:name=".WalkActivity" />
-        <activity android:name=".SettingsActivity" />
+        <activity android:name=".SettingsActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".DeletePetActivity" />
         <activity android:name=".NotificationSettingsActivity" />
 
-        <receiver android:name=".utils.ActionReceiver"/>
+        <receiver android:name=".utils.ActionReceiver" />
 
-        <receiver android:enabled="true"
+        <receiver
             android:name=".utils.MyBootReceiver"
+            android:enabled="true"
             android:permission="android.permission.RECEIVE_BOOT_COMPLETED">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

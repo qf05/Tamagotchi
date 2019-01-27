@@ -16,8 +16,8 @@ import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
 
 public class PetUtils {
 
-    public static int ILL_TAKE_HP = 1;
-    public static int TAKE_EAT = 5;
+    public static int ILL_TAKE_HP = 5;
+    public static int TAKE_EAT = 15;
     public static int ADD_EAT = 17;
     public static int ADD_HP_EAT = 6;
 

@@ -167,8 +167,8 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
 
     private void setViewPet() {
         PETS = db.petDao().getAll();
+        int height = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
         if (SELECTED_PET.isLive()) {
-            int height = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
                     if (SELECTED_PET.getLvl() < 20) {
@@ -333,6 +333,11 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             }
             changeVisibility();
         } else {
+            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.8));
+            layoutParams.setMargins(0, 0, 0, height / 15);
+            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+            petView.setLayoutParams(layoutParams);
             petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
             petView.setImageResource(R.drawable.die);
             eatProgressBar.setProgress(1);
@@ -340,13 +345,18 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             ill.setClickable(false);
             shitView.setVisibility(View.INVISIBLE);
             shitView.setClickable(false);
-            walk.setVisibility(View.INVISIBLE);
             walk.setClickable(false);
+            eat.setClickable(false);
+            sleep.setClickable(false);
+            ViewHelper.indicatorInvisible(illIndicator);
+            ViewHelper.indicatorInvisible(eatIndicator);
+            ViewHelper.indicatorInvisible(sleepIndicator);
+            ViewHelper.indicatorInvisible(walkIndicator);
             eatProgressBar.setProgress(0);
             hpProgressBar.setProgress(0);
             expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
             expProgressBar.setProgress(SELECTED_PET.getExperience());
-            lvl.setText(SELECTED_PET.getLvl() + getString(R.string.lvl));
+            lvl.setText(SELECTED_PET.getLvl() +" "+ getString(R.string.lvl));
         }
         if (viewYourPets) {
             rv.setVisibility(View.VISIBLE);
@@ -375,33 +385,38 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             ill.setVisibility(View.INVISIBLE);
             ill.setClickable(false);
         }
-        if (SELECTED_PET.getSatiety() < 5) {
+        if (SELECTED_PET.getSatiety() < 5 && !SELECTED_PET.isSlip()) {
             ViewHelper.indicatorVisible(MainActivity.this, eat, eatIndicator);
         }else {
             ViewHelper.indicatorInvisible(eatIndicator);
         }
-        if (SELECTED_PET.getNextWalk() <= now) {
+        if (SELECTED_PET.getNextWalk() <= now && !SELECTED_PET.isSlip()) {
             ViewHelper.indicatorVisible(MainActivity.this, walk, walkIndicator);
         }else {
             ViewHelper.indicatorInvisible(walkIndicator);
         }
-        if (SELECTED_PET.getNextSlip() <= now) {
+        if (SELECTED_PET.getNextSlip() <= now && !SELECTED_PET.isSlip()) {
             ViewHelper.indicatorVisible(MainActivity.this, sleep, sleepIndicator);
         }else {
             ViewHelper.indicatorInvisible(sleepIndicator);
         }
         walk.setVisibility(View.VISIBLE);
         walk.setClickable(true);
-        eatProgressBar.setProgress(SELECTED_PET.getSatiety());
-        hpProgressBar.setProgress(SELECTED_PET.getHp());
-        expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
-        expProgressBar.setProgress(SELECTED_PET.getExperience());
-        lvl.setText(SELECTED_PET.getLvl() + " " + getString(R.string.lvl));
+        ViewHelper.executeAfterViewHasDrawn(eatProgressBar, new Runnable() {
+            @Override
+            public void run() {
+                eatProgressBar.setProgress(SELECTED_PET.getSatiety());
+                hpProgressBar.setProgress(SELECTED_PET.getHp());
+                expProgressBar.setMax((int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6);
+                expProgressBar.setProgress(SELECTED_PET.getExperience());
+                lvl.setText(SELECTED_PET.getLvl() + " " + getString(R.string.lvl));
+            }
+        });
     }
 
     public void goWalk(View view) {
         walk.setClickable(false);
-        ViewHelper.playClick(MainActivity.this,ActionType.WALK);
+        ViewHelper.playClick(getApplicationContext(),ActionType.WALK);
         Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
@@ -535,7 +550,7 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     public void sleep(View view) {
         viewYourPets = false;
         sleep.setClickable(false);
-        ViewHelper.playClick(MainActivity.this,ActionType.SLEEP);
+        ViewHelper.playClick(getApplicationContext(),ActionType.SLEEP);
         Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override

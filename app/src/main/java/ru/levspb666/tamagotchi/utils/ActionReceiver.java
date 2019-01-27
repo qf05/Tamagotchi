@@ -32,7 +32,7 @@ public class ActionReceiver extends BroadcastReceiver {
                 if (pet.isSlip()
                         && !ActionType.WAKEUP.equals(actionType)
                         && !ActionType.EAT.equals(actionType)) {
-                    ifSleepAlarm(context, actionType, pet);
+                   pet = ifSleepAlarm(context, actionType, pet);
                 } else {
                     switch (actionType) {
                         case EAT:
@@ -54,10 +54,10 @@ public class ActionReceiver extends BroadcastReceiver {
                             shit(context, pet);
                             break;
                     }
-                    db.petDao().update(pet);
-                    if (MainActivity.handler != null) {
-                        MainActivity.handler.sendEmptyMessage(0);
-                    }
+                }
+                db.petDao().update(pet);
+                if (MainActivity.handler != null) {
+                    MainActivity.handler.sendEmptyMessage(0);
                 }
             } else {
                 cancelAllAlarm(context, pet);
@@ -97,10 +97,15 @@ public class ActionReceiver extends BroadcastReceiver {
         int petSatiety = pet.getSatiety() - TAKE_EAT;
         if (petSatiety <= 1) {
             pet.setSatiety(1);
+            AlarmUtils.cancelAlarm(context,ActionType.EAT,pet);
+            if (pet.isSlip()){
+                ifSleepAlarm(context,ActionType.EAT,pet);
+            }else {
+                NotificationUtils.notification(context, pet, ActionType.EAT);
+            }
             if (AlarmUtils.checkAlarm(context, ActionType.ILL, pet)) {
                 setRepeatAlarm(context, ActionType.ILL, pet);
             }
-            NotificationUtils.notification(context, pet, ActionType.EAT);
         } else {
             pet.setSatiety(petSatiety);
         }
@@ -123,7 +128,6 @@ public class ActionReceiver extends BroadcastReceiver {
 
     private Pet wakeUp(final Context context, Pet pet) {
         pet.setSlip(false);
-//        setAlarm(context,ActionType.SLEEP,pet);
         NotificationUtils.notification(context, pet, ActionType.WAKEUP);
         AlarmUtils.checkAllAlarmPet(context, pet);
         int hp = pet.getHp() + 5;
@@ -135,7 +139,7 @@ public class ActionReceiver extends BroadcastReceiver {
         return pet;
     }
 
-    private void ifSleepAlarm(Context context, ActionType action, Pet pet) {
+    private Pet ifSleepAlarm(Context context, ActionType action, Pet pet) {
         AlarmManager alarmMgr = (AlarmManager) context.getSystemService(Context.ALARM_SERVICE);
         Intent intent = new Intent(
                 action.toString(),
@@ -148,15 +152,24 @@ public class ActionReceiver extends BroadcastReceiver {
                 intent,
                 //  https://stackoverflow.com/questions/14485368/delete-alarm-from-alarmmanager-using-cancel-android
                 FLAG_UPDATE_CURRENT);
-
-        if (action == ActionType.EAT || action == ActionType.ILL) {
+        long newTime = pet.getWakeUp()+1000;
+        if (ActionType.EAT.equals(action) || ActionType.ILL.equals(action)) {
             if (alarmMgr != null) {
-                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, pet.getWakeUp() + 1000, AlarmUtils.repeatTime(action), pendingIntent);
+                alarmMgr.setRepeating(AlarmManager.RTC_WAKEUP, newTime, AlarmUtils.repeatTime(action), pendingIntent);
             }
         } else {
             if (alarmMgr != null) {
-                alarmMgr.set(AlarmManager.RTC_WAKEUP, pet.getWakeUp() + 1000, pendingIntent);
+                alarmMgr.set(AlarmManager.RTC_WAKEUP, newTime, pendingIntent);
+            }
+            switch (action){
+                case WALK:
+                    pet.setNextWalk(newTime);
+                    break;
+                case SHIT:
+                    pet.setNextShit(newTime);
+                    break;
             }
         }
+        return pet;
     }
 }
