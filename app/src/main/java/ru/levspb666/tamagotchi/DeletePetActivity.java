@@ -13,6 +13,8 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -29,6 +31,7 @@ import java.util.Objects;
 
 import ru.levspb666.tamagotchi.adapters.DeleteRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
+import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
@@ -42,6 +45,8 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
     private Map<Integer, View> deleteMap = new HashMap<>();
     private List<Pet> pets;
     private static DataBase db;
+    private Button back;
+    private Button delete;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -49,7 +54,8 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         setContentView(R.layout.delete_pet_activity);
         Objects.requireNonNull(getSupportActionBar()).hide();
         DeletePetActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        back = findViewById(R.id.backFromDel);
+        delete = findViewById(R.id.delPet);
         RecyclerView rv = findViewById(R.id.delete_rv);
         rv.setHasFixedSize(true);
         LinearLayoutManager llm = new LinearLayoutManager(DeletePetActivity.this);
@@ -109,6 +115,7 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
                         AlarmUtils.cancelAllAlarm(getApplicationContext(),pet);
                     }
                 }
+                ViewHelper.playClick(DeletePetActivity.this, ActionType.DIE);
                 dialog.cancel();
                 Toast toast = Toast.makeText(DeletePetActivity.this,
                         "Удалено " + deleteMap.size() + " питомцев", Toast.LENGTH_SHORT);
@@ -122,6 +129,7 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         cancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ViewHelper.playClick(DeletePetActivity.this, ActionType.DIE);
                 dialog.cancel();
             }
         });
@@ -143,12 +151,47 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
     }
 
     public void delete(View view) {
-        sureDialog();
+        delete.setClickable(false);
+        ViewHelper.playClick(DeletePetActivity.this, ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(DeletePetActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                delete.setClickable(true);
+                sureDialog();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        delete.startAnimation(animation);
+
     }
 
     public void goBack(View view) {
-        Intent intent = new Intent(DeletePetActivity.this, SettingsActivity.class);
-        startActivity(intent);
-        finish();
+        back.setClickable(false);
+        ViewHelper.playClick(DeletePetActivity.this, ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(DeletePetActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(DeletePetActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                back.setClickable(true);
+                finish();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        back.startAnimation(animation);
     }
 }

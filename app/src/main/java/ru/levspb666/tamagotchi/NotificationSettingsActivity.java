@@ -12,7 +12,10 @@ import android.view.Gravity;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.ListView;
 import android.widget.TimePicker;
@@ -32,6 +35,8 @@ import java.util.Map;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.adapters.TimeSilenceListAdapter;
+import ru.levspb666.tamagotchi.enums.ActionType;
+import ru.levspb666.tamagotchi.utils.ViewHelper;
 
 import static ru.levspb666.tamagotchi.MainActivity.APP_PREFERENCES;
 
@@ -54,6 +59,8 @@ public class NotificationSettingsActivity extends AppCompatActivity {
     private int editItem = -1;
     private boolean wakeUpNotification = true;
     private boolean notificationOff = false;
+    private Button back;
+    private Button add;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -61,7 +68,8 @@ public class NotificationSettingsActivity extends AppCompatActivity {
         setContentView(R.layout.notification_settings);
         Objects.requireNonNull(getSupportActionBar()).hide();
         NotificationSettingsActivity.this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
+        back = findViewById(R.id.backFromNotification);
+        add = findViewById(R.id.add);
         settings = getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
         if (settings.contains(PREFERENCES_WAKE_UP_NOTIFICATION)) {
             wakeUpNotification = settings.getBoolean(PREFERENCES_WAKE_UP_NOTIFICATION, true);
@@ -74,6 +82,7 @@ public class NotificationSettingsActivity extends AppCompatActivity {
         wakeUpCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ViewHelper.playClick(NotificationSettingsActivity.this, ActionType.DIE);
                 wakeUpNotification = !wakeUpNotification;
                 wakeUpCheckBox.setChecked(wakeUpNotification);
                 SharedPreferences.Editor editor = settings.edit();
@@ -86,6 +95,7 @@ public class NotificationSettingsActivity extends AppCompatActivity {
         notificationCheckBox.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                ViewHelper.playClick(NotificationSettingsActivity.this, ActionType.DIE);
                 notificationOff = !notificationOff;
                 notificationCheckBox.setChecked(notificationOff);
                 SharedPreferences.Editor editor = settings.edit();
@@ -101,8 +111,25 @@ public class NotificationSettingsActivity extends AppCompatActivity {
         registerForContextMenu(listView);
     }
 
-    public void addSilence(View view){
-        setTimeSilence();
+    public void addSilence(View view) {
+        add.setClickable(false);
+        ViewHelper.playClick(NotificationSettingsActivity.this, ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(NotificationSettingsActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                add.setClickable(true);
+                setTimeSilence();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        add.startAnimation(animation);
     }
 
     public void setTimeSilence() {
@@ -211,8 +238,25 @@ public class NotificationSettingsActivity extends AppCompatActivity {
     }
 
     public void goBack(View view) {
-        Intent intent = new Intent(NotificationSettingsActivity.this, SettingsActivity.class);
-        startActivity(intent);
-        finish();
+        back.setClickable(false);
+        ViewHelper.playClick(NotificationSettingsActivity.this, ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(NotificationSettingsActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                back.setClickable(true);
+                Intent intent = new Intent(NotificationSettingsActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        back.startAnimation(animation);
     }
 }

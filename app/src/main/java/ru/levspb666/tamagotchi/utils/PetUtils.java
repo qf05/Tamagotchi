@@ -9,6 +9,7 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.model.Pet;
 
 import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
@@ -78,20 +79,21 @@ public class PetUtils {
         return pets;
     }
 
-    public static void addExperience(int add) {
+    public static void addExperience(int add, Context context) {
         int exp = SELECTED_PET.getExperience();
         exp += add;
         if (exp >= (int) (50 + 200 * SELECTED_PET.getLvl() + Math.pow(1.1, SELECTED_PET.getLvl() + 25)) / 6) {
-            lvlUp(exp);
+            lvlUp(exp, context);
         } else {
             SELECTED_PET.setExperience(exp);
         }
     }
 
-    private static void lvlUp(int exp) {
+    private static void lvlUp(int exp,Context context) {
         exp -= SELECTED_PET.getExperience();
         SELECTED_PET.setLvl(SELECTED_PET.getLvl() + 1);
         SELECTED_PET.setExperience(exp);
+        ViewHelper.playClick(context, ActionType.LVLUP);
     }
 
 }

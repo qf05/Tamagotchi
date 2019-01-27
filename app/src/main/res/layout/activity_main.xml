@@ -234,4 +234,45 @@
         android:onClick="toSettings"
         android:background="@drawable/settings"
         />
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/illIndicator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:layout_alignStart="@+id/ill"
+        android:layout_alignBottom="@+id/ill"
+        android:src="@drawable/red"/>
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/eatIndicator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:layout_alignStart="@+id/eat"
+        android:layout_alignBottom="@+id/eat"
+        android:src="@drawable/red"/>
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/sleepIndicator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:layout_alignStart="@+id/sleep"
+        android:layout_alignBottom="@+id/sleep"
+        android:src="@drawable/red"/>
+
+    <ImageView
+        android:visibility="invisible"
+        android:id="@+id/walkIndicator"
+        android:layout_width="70dp"
+        android:layout_height="70dp"
+        android:scaleType="fitXY"
+        android:layout_alignStart="@+id/goWalk"
+        android:layout_alignBottom="@+id/goWalk"
+        android:src="@drawable/red"/>
+
 </RelativeLayout>

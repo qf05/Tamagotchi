@@ -11,11 +11,11 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.Gravity;
-import android.view.Menu;
-import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -39,6 +39,7 @@ import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
 import ru.levspb666.tamagotchi.utils.ViewHelper;
 
+import static ru.levspb666.tamagotchi.utils.AlarmUtils.setRepeatAlarm;
 import static ru.levspb666.tamagotchi.utils.NotificationUtils.notificationCancel;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_EAT;
 import static ru.levspb666.tamagotchi.utils.PetUtils.ADD_HP_EAT;
@@ -51,7 +52,6 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     private SharedPreferences settings;
     public static Pet SELECTED_PET;
     public static boolean SOUND_OFF = false;
-    private MenuItem soundCheckbox;
     private TextView petName;
     private ImageView petView;
     public static List<Pet> PETS = new ArrayList<>();
@@ -68,6 +68,13 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     private boolean viewYourPets = false;
     private ImageView upDown;
     private RecyclerView rv;
+    private ImageView illIndicator;
+    private ImageView eatIndicator;
+    private ImageView sleepIndicator;
+    private ImageView walkIndicator;
+    private Button eat;
+    private Button sleep;
+    private Button settingsButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -81,9 +88,16 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
         shitView.setOnClickListener(shitClickListener);
         ill = findViewById(R.id.ill);
         walk = findViewById(R.id.goWalk);
+        eat = findViewById(R.id.eat);
+        sleep = findViewById(R.id.sleep);
         eatProgressBar = findViewById(R.id.eatProgressBar);
         hpProgressBar = findViewById(R.id.hpProgressBar);
         expProgressBar = findViewById(R.id.expProgressBar);
+        illIndicator = findViewById(R.id.illIndicator);
+        eatIndicator = findViewById(R.id.eatIndicator);
+        walkIndicator = findViewById(R.id.walkIndicator);
+        sleepIndicator = findViewById(R.id.sleepIndicator);
+        settingsButton = findViewById(R.id.settings);
         lvl = findViewById(R.id.lvl);
         LinearLayout yourPets = findViewById(R.id.yourPets);
         yourPets.setOnClickListener(changePetClickListener);
@@ -141,8 +155,8 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             editor.putLong(PREFERENCES_SELECTED_PET, SELECTED_PET.getId());
             editor.apply();
         }
-        if (PETS.size()==0){
-            ViewHelper.createDialog(this,this);
+        if (PETS.size() == 0) {
+            ViewHelper.createDialog(this, this);
         }
 
         if (SELECTED_PET != null) {
@@ -157,106 +171,106 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
             int height = getApplicationContext().getResources().getDisplayMetrics().heightPixels;
             switch (PetsType.valueOf(SELECTED_PET.getType())) {
                 case CAT:
-                if (SELECTED_PET.getLvl()<20){
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                            ViewGroup.LayoutParams.MATCH_PARENT, height/3);
-                    layoutParams.setMargins(0,0,0,height/15);
-                    layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                    petView.setLayoutParams(layoutParams);
-                    petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                    if (SELECTED_PET.isSlip()){
-                        petView.setImageResource(R.drawable.cat_small_sleep);
-                    }else {
-                        if (SELECTED_PET.isLive()){
-                            petView.setImageResource(R.drawable.cat_small);
-                        }else {
+                    if (SELECTED_PET.getLvl() < 20) {
+                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                ViewGroup.LayoutParams.MATCH_PARENT, height / 3);
+                        layoutParams.setMargins(0, 0, 0, height / 15);
+                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                        petView.setLayoutParams(layoutParams);
+                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                        if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.cat_small_sleep);
+                        } else {
+                            if (SELECTED_PET.isLive()) {
+                                petView.setImageResource(R.drawable.cat_small);
+                            } else {
+                                petView.setImageResource(R.drawable.cat_small_sleep);
+                            }
                         }
-                    }
 
-                }else {
-                    if (SELECTED_PET.getLvl() < 50) {
-                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2.5));
-                        layoutParams.setMargins(0,0,0,height/15);
-                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                        petView.setLayoutParams(layoutParams);
-                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        if (SELECTED_PET.isSlip()){
-                            petView.setImageResource(R.drawable.cat_norm_sleep);
-                        }else {
-                            if (SELECTED_PET.isLive()){
-                                petView.setImageResource(R.drawable.cat_norm);
-                            }else {
+                    } else {
+                        if (SELECTED_PET.getLvl() < 50) {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2.5));
+                            layoutParams.setMargins(0, 0, 0, height / 15);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cat_norm_sleep);
+                            } else {
+                                if (SELECTED_PET.isLive()) {
+                                    petView.setImageResource(R.drawable.cat_norm);
+                                } else {
+                                    petView.setImageResource(R.drawable.cat_norm_sleep);
+                                }
                             }
-                        }
-                    }else {
-                        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, height/2);
-                        layoutParams.setMargins(height/10,0,0,height/30);
-                        layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
-                        petView.setLayoutParams(layoutParams);
-                        petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        if (SELECTED_PET.isSlip()){
-                            petView.setImageResource(R.drawable.cat_old_sleep);
-                        }else {
-                            if (SELECTED_PET.isLive()){
-                                petView.setImageResource(R.drawable.cat_old);
-                            }else {
+                        } else {
+                            RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
+                                    ViewGroup.LayoutParams.MATCH_PARENT, height / 2);
+                            layoutParams.setMargins(height / 10, 0, 0, height / 30);
+                            layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
+                            petView.setLayoutParams(layoutParams);
+                            petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cat_old_sleep);
+                            } else {
+                                if (SELECTED_PET.isLive()) {
+                                    petView.setImageResource(R.drawable.cat_old);
+                                } else {
+                                    petView.setImageResource(R.drawable.cat_old_sleep);
+                                }
                             }
                         }
                     }
-                }
-                break;
+                    break;
                 case DOG:
-                    if (SELECTED_PET.getLvl()<20){
+                    if (SELECTED_PET.getLvl() < 20) {
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, height/3);
-                        layoutParams.setMargins(0,0,0,height/10);
+                                ViewGroup.LayoutParams.MATCH_PARENT, height / 3);
+                        layoutParams.setMargins(0, 0, 0, height / 10);
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                         petView.setLayoutParams(layoutParams);
                         petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        if (SELECTED_PET.isSlip()){
+                        if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.dog_small_sleep);
-                        }else {
-                            if (SELECTED_PET.isLive()){
+                        } else {
+                            if (SELECTED_PET.isLive()) {
                                 petView.setImageResource(R.drawable.dog_small);
-                            }else {
+                            } else {
                                 petView.setImageResource(R.drawable.dog_small_sleep);
                             }
                         }
-                    }else {
+                    } else {
                         if (SELECTED_PET.getLvl() < 50) {
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2));
-                            layoutParams.setMargins(0,0,0,height/10);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2));
+                            layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
                             petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            if (SELECTED_PET.isSlip()){
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.dog_norm_sleep);
-                            }else {
-                                if (SELECTED_PET.isLive()){
+                            } else {
+                                if (SELECTED_PET.isLive()) {
                                     petView.setImageResource(R.drawable.dog_norm);
-                                }else {
+                                } else {
                                     petView.setImageResource(R.drawable.dog_norm_sleep);
                                 }
                             }
-                        }else {
+                        } else {
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/1.8));
-                            layoutParams.setMargins(0,0,0,height/10);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.8));
+                            layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
                             petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            if (SELECTED_PET.isSlip()){
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.dog_old_sleep);
-                            }else {
-                                if (SELECTED_PET.isLive()){
+                            } else {
+                                if (SELECTED_PET.isLive()) {
                                     petView.setImageResource(R.drawable.dog_old);
-                                }else {
+                                } else {
                                     petView.setImageResource(R.drawable.dog_old_sleep);
                                 }
                             }
@@ -264,52 +278,52 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
                     }
                     break;
                 case CTHULHU:
-                    if (SELECTED_PET.getLvl()<20){
+                    if (SELECTED_PET.getLvl() < 20) {
                         RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/3));
-                        layoutParams.setMargins(0,0,0,height/10);
+                                ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 3));
+                        layoutParams.setMargins(0, 0, 0, height / 10);
                         layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                         petView.setLayoutParams(layoutParams);
                         petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                        if (SELECTED_PET.isSlip()){
+                        if (SELECTED_PET.isSlip()) {
                             petView.setImageResource(R.drawable.cthulhu_small_sleep);
-                        }else {
-                            if (SELECTED_PET.isLive()){
+                        } else {
+                            if (SELECTED_PET.isLive()) {
                                 petView.setImageResource(R.drawable.cthulhu_small);
-                            }else {
+                            } else {
                                 petView.setImageResource(R.drawable.cthulhu_small_sleep);
                             }
                         }
-                    }else {
+                    } else {
                         if (SELECTED_PET.getLvl() < 50) {
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/2.5));
-                            layoutParams.setMargins(0,0,0,height/10);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 2.5));
+                            layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
                             petView.setScaleType(ImageView.ScaleType.FIT_CENTER);
-                            if (SELECTED_PET.isSlip()){
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cthulhu_norm_sleep);
-                            }else {
-                                if (SELECTED_PET.isLive()){
+                            } else {
+                                if (SELECTED_PET.isLive()) {
                                     petView.setImageResource(R.drawable.cthulhu_norm);
-                                }else {
+                                } else {
                                     petView.setImageResource(R.drawable.cthulhu_norm_sleep);
                                 }
                             }
-                        }else {
+                        } else {
                             RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(
-                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height/1.5));
-                            layoutParams.setMargins(0,0,0,height/10);
+                                    ViewGroup.LayoutParams.MATCH_PARENT, (int) (height / 1.5));
+                            layoutParams.setMargins(0, 0, 0, height / 10);
                             layoutParams.addRule(RelativeLayout.ALIGN_PARENT_BOTTOM);
                             petView.setLayoutParams(layoutParams);
                             petView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-                            if (SELECTED_PET.isSlip()){
+                            if (SELECTED_PET.isSlip()) {
                                 petView.setImageResource(R.drawable.cthulhu_old_sleep);
-                            }else {
-                                if (SELECTED_PET.isLive()){
+                            } else {
+                                if (SELECTED_PET.isLive()) {
                                     petView.setImageResource(R.drawable.cthulhu_old);
-                                }else {
+                                } else {
                                     petView.setImageResource(R.drawable.cthulhu_old_sleep);
                                 }
                             }
@@ -344,7 +358,8 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     }
 
     private void changeVisibility() {
-        if (SELECTED_PET.getNextShit() < Calendar.getInstance().getTime().getTime()) {
+        long now = Calendar.getInstance().getTimeInMillis();
+        if (SELECTED_PET.getNextShit() < now) {
             shitView.setVisibility(View.VISIBLE);
             shitView.setClickable(true);
         } else {
@@ -354,9 +369,26 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
         if (SELECTED_PET.isIll()) {
             ill.setVisibility(View.VISIBLE);
             ill.setClickable(true);
+            ViewHelper.indicatorVisible(MainActivity.this, ill, illIndicator);
         } else {
+            ViewHelper.indicatorInvisible(illIndicator);
             ill.setVisibility(View.INVISIBLE);
             ill.setClickable(false);
+        }
+        if (SELECTED_PET.getSatiety() < 5) {
+            ViewHelper.indicatorVisible(MainActivity.this, eat, eatIndicator);
+        }else {
+            ViewHelper.indicatorInvisible(eatIndicator);
+        }
+        if (SELECTED_PET.getNextWalk() <= now) {
+            ViewHelper.indicatorVisible(MainActivity.this, walk, walkIndicator);
+        }else {
+            ViewHelper.indicatorInvisible(walkIndicator);
+        }
+        if (SELECTED_PET.getNextSlip() <= now) {
+            ViewHelper.indicatorVisible(MainActivity.this, sleep, sleepIndicator);
+        }else {
+            ViewHelper.indicatorInvisible(sleepIndicator);
         }
         walk.setVisibility(View.VISIBLE);
         walk.setClickable(true);
@@ -368,26 +400,44 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     }
 
     public void goWalk(View view) {
-        if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
-                    getString(R.string.not_walk_if_sleep), Toast.LENGTH_LONG);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        } else {
-            if (SELECTED_PET != null) {
-                Intent intent = new Intent(MainActivity.this, WalkActivity.class);
-                startActivity(intent);
+        walk.setClickable(false);
+        ViewHelper.playClick(MainActivity.this,ActionType.WALK);
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
             }
-        }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (SELECTED_PET.isSlip()) {
+                    Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                            getString(R.string.not_walk_if_sleep), Toast.LENGTH_LONG);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    if (SELECTED_PET != null) {
+                        ViewHelper.indicatorInvisible(walkIndicator);
+                        Intent intent = new Intent(MainActivity.this, WalkActivity.class);
+                        startActivity(intent);
+                    }
+                }
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        walk.startAnimation(animation);
     }
 
     private View.OnClickListener shitClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
+            ViewHelper.playClick(MainActivity.this,ActionType.SHIT);
             viewYourPets = false;
             handler.sendEmptyMessage(0);
             SELECTED_PET.setNextShit(AlarmUtils.nextShit());
-            PetUtils.addExperience(10);
+            PetUtils.addExperience(10, MainActivity.this);
             db.petDao().update(SELECTED_PET);
             AlarmUtils.setAlarm(getApplicationContext(), ActionType.SHIT, SELECTED_PET);
             AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
@@ -403,73 +453,129 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
 
     public void ill(View view) {
         viewYourPets = false;
-        SELECTED_PET.setIll(false);
-        PetUtils.addExperience(11);
-        db.petDao().update(SELECTED_PET);
-        ill.setVisibility(View.INVISIBLE);
         ill.setClickable(false);
-        handler.sendEmptyMessage(0);
-        AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.ILL, SELECTED_PET);
-        notificationCancel(getApplicationContext(), ActionType.ILL, SELECTED_PET);
+        ViewHelper.playClick(MainActivity.this,ActionType.CURE);
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                SELECTED_PET.setIll(false);
+                PetUtils.addExperience(11, MainActivity.this);
+                db.petDao().update(SELECTED_PET);
+                ill.setVisibility(View.INVISIBLE);
+                ViewHelper.indicatorInvisible(illIndicator);
+                handler.sendEmptyMessage(0);
+                AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.ILL, SELECTED_PET);
+                notificationCancel(getApplicationContext(), ActionType.ILL, SELECTED_PET);
+                settingsButton.setClickable(true);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        ill.startAnimation(animation);
     }
 
     public void eat(View view) {
         viewYourPets = false;
-        if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
-                    getString(R.string.not_eat_if_sleep), Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        } else {
-            if (SELECTED_PET.getSatiety() < 100) {
-                SELECTED_PET.setSatiety(SELECTED_PET.getSatiety() + ADD_EAT);
-                if (SELECTED_PET.getSatiety() > 100) {
-                    SELECTED_PET.setSatiety(100);
-                }
-                SELECTED_PET.setHp(SELECTED_PET.getHp() + ADD_HP_EAT);
-                if (SELECTED_PET.getHp() > 100) {
-                    SELECTED_PET.setHp(100);
-                }
-                PetUtils.addExperience(7);
-                db.petDao().update(SELECTED_PET);
-                handler.sendEmptyMessage(0);
-                notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
-                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
-            } else {
-                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
-                        getString(R.string.not_hunger), Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+        eat.setClickable(false);
+        ViewHelper.playClick(MainActivity.this,ActionType.EAT);
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
             }
-        }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (SELECTED_PET.isSlip()) {
+                    Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                            getString(R.string.not_eat_if_sleep), Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    if (AlarmUtils.checkAlarm(getApplicationContext(), ActionType.EAT, SELECTED_PET)) {
+                        setRepeatAlarm(getApplicationContext(), ActionType.EAT, SELECTED_PET);
+                    }
+                    ViewHelper.indicatorInvisible(eatIndicator);
+                    if (SELECTED_PET.getSatiety() < 100) {
+                        SELECTED_PET.setSatiety(SELECTED_PET.getSatiety() + ADD_EAT);
+                        if (SELECTED_PET.getSatiety() > 100) {
+                            SELECTED_PET.setSatiety(100);
+                        }
+                        SELECTED_PET.setHp(SELECTED_PET.getHp() + ADD_HP_EAT);
+                        if (SELECTED_PET.getHp() > 100) {
+                            SELECTED_PET.setHp(100);
+                        }
+                        PetUtils.addExperience(7,MainActivity.this);
+                        db.petDao().update(SELECTED_PET);
+                        handler.sendEmptyMessage(0);
+                        notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
+                        AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+                    } else {
+                        Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                                getString(R.string.not_hunger), Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                }
+                eat.setClickable(true);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        eat.startAnimation(animation);
     }
 
     public void sleep(View view) {
         viewYourPets = false;
-        if (SELECTED_PET.isSlip()) {
-            Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
-                    getString(R.string.is_sleep), Toast.LENGTH_SHORT);
-            toast.setGravity(Gravity.CENTER, 0, 0);
-            toast.show();
-        } else {
-            if (!SELECTED_PET.isIll()) {
-                SELECTED_PET.setSlip(true);
-                SELECTED_PET.setWakeUp(AlarmUtils.nextWakeUp());
-                SELECTED_PET.setNextSlip(AlarmUtils.nextSleep() + (SELECTED_PET.getWakeUp() - Calendar.getInstance().getTimeInMillis()));
-                PetUtils.addExperience(14);
-                db.petDao().update(SELECTED_PET);
-                AlarmUtils.setAlarm(getApplicationContext(), ActionType.WAKEUP, SELECTED_PET);
-                AlarmUtils.setAlarm(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
-                notificationCancel(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
-                AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
-                handler.sendEmptyMessage(0);
-            } else {
-                Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
-                        getString(R.string.not_sleep_if_ill), Toast.LENGTH_SHORT);
-                toast.setGravity(Gravity.CENTER, 0, 0);
-                toast.show();
+        sleep.setClickable(false);
+        ViewHelper.playClick(MainActivity.this,ActionType.SLEEP);
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
             }
-        }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                if (SELECTED_PET.isSlip()) {
+                    Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                            getString(R.string.is_sleep), Toast.LENGTH_SHORT);
+                    toast.setGravity(Gravity.CENTER, 0, 0);
+                    toast.show();
+                } else {
+                    if (!SELECTED_PET.isIll()) {
+                        ViewHelper.indicatorInvisible(sleepIndicator);
+                        SELECTED_PET.setSlip(true);
+                        SELECTED_PET.setWakeUp(AlarmUtils.nextWakeUp());
+                        SELECTED_PET.setNextSlip(AlarmUtils.nextSleep() + (SELECTED_PET.getWakeUp() - Calendar.getInstance().getTimeInMillis()));
+                        PetUtils.addExperience(14,MainActivity.this);
+                        db.petDao().update(SELECTED_PET);
+                        AlarmUtils.setAlarm(getApplicationContext(), ActionType.WAKEUP, SELECTED_PET);
+                        AlarmUtils.setAlarm(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
+                        notificationCancel(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
+                        AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+                        handler.sendEmptyMessage(0);
+                    } else {
+                        Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
+                                getString(R.string.not_sleep_if_ill), Toast.LENGTH_SHORT);
+                        toast.setGravity(Gravity.CENTER, 0, 0);
+                        toast.show();
+                    }
+                }
+                sleep.setClickable(true);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        sleep.startAnimation(animation);
     }
 
     View.OnClickListener changePetClickListener = new View.OnClickListener() {
@@ -492,8 +598,25 @@ public class MainActivity extends AppCompatActivity implements QuickChangePetRVA
     }
 
     public void toSettings(View view) {
-        Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
-        startActivity(intent);
+        settingsButton.setClickable(false);
+        ViewHelper.playClick(MainActivity.this,ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(MainActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(MainActivity.this, SettingsActivity.class);
+                startActivity(intent);
+                settingsButton.setClickable(true);
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        settingsButton.startAnimation(animation);
     }
 
     private static class MyHandler extends Handler {

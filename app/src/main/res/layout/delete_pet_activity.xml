@@ -76,6 +76,7 @@
         android:layout_alignParentBottom="true"/>
 
     <Button
+        android:id="@+id/delPet"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentEnd="true"
@@ -86,6 +87,7 @@
         android:background="@drawable/del" />
 
     <Button
+        android:id="@+id/backFromDel"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_alignParentBottom="true"

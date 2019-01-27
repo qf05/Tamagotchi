@@ -14,6 +14,8 @@ import android.view.Display;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -191,7 +193,7 @@ public class WalkActivity extends AppCompatActivity {
                 home.setAlpha(1f);
                 AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.WALK, SELECTED_PET);
                 SELECTED_PET.setNextWalk(AlarmUtils.nextWalk());
-                PetUtils.addExperience(15);
+                PetUtils.addExperience(15,WalkActivity.this);
                 db.petDao().update(SELECTED_PET);
                 AlarmUtils.setAlarm(getApplicationContext(), ActionType.WALK, SELECTED_PET);
                 AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
@@ -216,9 +218,26 @@ public class WalkActivity extends AppCompatActivity {
     }
 
     public void goHome(View view) {
-        Intent intent = new Intent(WalkActivity.this, MainActivity.class);
-        startActivity(intent);
-        finish();
+        home.setClickable(false);
+        ViewHelper.playClick(WalkActivity.this, ActionType.DIE);
+        Animation animation = AnimationUtils.loadAnimation(WalkActivity.this, R.anim.click);
+        animation.setAnimationListener(new Animation.AnimationListener() {
+            @Override
+            public void onAnimationStart(Animation animation) {
+            }
+            @Override
+            public void onAnimationEnd(Animation animation) {
+                Intent intent = new Intent(WalkActivity.this, MainActivity.class);
+                startActivity(intent);
+                home.setClickable(true);
+                finish();
+            }
+            @Override
+            public void onAnimationRepeat(Animation animation) {
+
+            }
+        });
+        home.startAnimation(animation);
     }
 
     @Override
