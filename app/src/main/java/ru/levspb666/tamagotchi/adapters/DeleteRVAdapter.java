@@ -43,7 +43,7 @@ public class DeleteRVAdapter extends RecyclerView.Adapter<DeleteRVAdapter.PetVie
             petLvl = itemView.findViewById(R.id.pet_lvl_del);
             petIcon = itemView.findViewById(R.id.pet_icon_del);
             checkBox = itemView.findViewById(R.id.checkbox_delete);
-            checkBox.setOnClickListener(this);
+            itemView.setOnClickListener(this);
         }
 
         @Override
@@ -72,16 +72,20 @@ public class DeleteRVAdapter extends RecyclerView.Adapter<DeleteRVAdapter.PetVie
         holder.petName.setText(pets.get(position).getName());
         holder.petLvl.setText(pets.get(position).getLvl() + " lvl");
         PetsType petsType = PetsType.valueOf(pets.get(position).getType());
-        switch (petsType) {
-            case CAT:
-                holder.petIcon.setImageResource(R.drawable.cat);
-                break;
-            case DOG:
-                holder.petIcon.setImageResource(R.drawable.dog);
-                break;
-            case CTHULHU:
-                holder.petIcon.setImageResource(R.drawable.cthulhu);
-                break;
+        if (pets.get(position).isLive()) {
+            switch (petsType) {
+                case CAT:
+                    holder.petIcon.setImageResource(R.drawable.cat_icon);
+                    break;
+                case DOG:
+                    holder.petIcon.setImageResource(R.drawable.dog_icon);
+                    break;
+                case CTHULHU:
+                    holder.petIcon.setImageResource(R.drawable.cthulhu_icon);
+                    break;
+            }
+        }else {
+            holder.petIcon.setImageResource(R.drawable.die);
         }
     }
 

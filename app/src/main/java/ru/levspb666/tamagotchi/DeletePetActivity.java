@@ -159,9 +159,10 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
 
     @Override
     public void onItemClick(View view, int position) {
-        CheckBox checkBox = (CheckBox) view;
+        CheckBox checkBox = view.findViewById(R.id.checkbox_delete);
+        checkBox.setChecked(!checkBox.isChecked());
         if (checkBox.isChecked()) {
-            deleteMap.put(position, view);
+            deleteMap.put(position, checkBox);
             Log.i("CHECKBOX", position + "");
         } else {
             if (deleteMap.containsKey(position)) {
