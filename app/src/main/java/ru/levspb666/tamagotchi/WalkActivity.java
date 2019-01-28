@@ -23,11 +23,13 @@ import android.widget.ProgressBar;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.NotificationUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
@@ -201,6 +203,10 @@ public class WalkActivity extends AppCompatActivity {
                 progressBar.setVisibility(View.INVISIBLE);
                 home.setClickable(true);
                 home.setAlpha(1f);
+                db.historyDao().insert(new History(
+                        Calendar.getInstance().getTimeInMillis(),
+                        ActionType.WALK.toString(),
+                        SELECTED_PET.getId()));
                 AlarmUtils.cancelAlarm(getApplicationContext(), ActionType.WALK, SELECTED_PET);
                 SELECTED_PET.setNextWalk(AlarmUtils.nextWalk());
                 PetUtils.addExperience(15,WalkActivity.this);

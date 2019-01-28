@@ -236,7 +236,8 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-
+                Intent intent = new Intent(SettingsActivity.this, HistoryActivity.class);
+                startActivity(intent);
                 history.setClickable(true);
             }
 

@@ -4,12 +4,15 @@ import android.content.Context;
 import android.view.Gravity;
 import android.widget.Toast;
 
+import java.util.Calendar;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Pattern;
 
+import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.model.Pet;
 
 import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
@@ -94,6 +97,10 @@ public class PetUtils {
         SELECTED_PET.setLvl(SELECTED_PET.getLvl() + 1);
         SELECTED_PET.setExperience(exp);
         ViewHelper.playClick(context, ActionType.LVLUP);
+        DataBase.getAppDatabase(context).historyDao().insert(new History(
+                Calendar.getInstance().getTimeInMillis(),
+                ActionType.LVLUP.toString(),
+                SELECTED_PET.getId()));
     }
 
 }

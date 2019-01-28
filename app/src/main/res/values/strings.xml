@@ -43,6 +43,17 @@
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
     <string name="error_loading">Ошибка загрузки видео</string>
 
+    <string name="born">родился</string>
+    <string name="eat">поел</string>
+    <string name="walk">погулял</string>
+    <string name="ill">заболел</string>
+    <string name="cure">вылечился</string>
+    <string name="sleep">уснул</string>
+    <string name="wake_up">проснулся</string>
+    <string name="lvl_up">LVL UP</string>
+    <string name="shit">покакал</string>
+    <string name="die">умер</string>
+
     <string-array name="pets">
         <item>Кошка</item>
         <item>Собака</item>
@@ -52,5 +63,11 @@
     <string-array name="sort">
         <item>имени</item>
         <item>уровню</item>
+    </string-array>
+
+    <string-array name="grouping">
+        <item>дате</item>
+        <item>питомцам</item>
+        <item>событиям</item>
     </string-array>
 </resources>

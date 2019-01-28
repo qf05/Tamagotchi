@@ -21,6 +21,7 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
@@ -29,11 +30,13 @@ import ru.levspb666.tamagotchi.SettingsActivity;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.model.Pet;
 
 import static ru.levspb666.tamagotchi.MainActivity.APP_PREFERENCES;
 import static ru.levspb666.tamagotchi.MainActivity.PETS;
 import static ru.levspb666.tamagotchi.MainActivity.PREFERENCES_SELECTED_PET;
+import static ru.levspb666.tamagotchi.MainActivity.SELECTED_PET;
 import static ru.levspb666.tamagotchi.MainActivity.SOUND_OFF;
 
 public class ViewHelper {
@@ -97,6 +100,10 @@ public class ViewHelper {
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putLong(PREFERENCES_SELECTED_PET, id);
                     editor.apply();
+                    db.historyDao().insert(new History(
+                            Calendar.getInstance().getTimeInMillis(),
+                            ActionType.CREATE.toString(),
+                            SELECTED_PET.getId()));
                     if (activity.getLocalClassName().equalsIgnoreCase("MainActivity")) {
                         MainActivity.handler.sendEmptyMessage(0);
                     }else {

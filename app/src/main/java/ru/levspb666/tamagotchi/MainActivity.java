@@ -41,6 +41,7 @@ import ru.levspb666.tamagotchi.adapters.QuickChangePetRVAdapter;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.model.Pet;
 import ru.levspb666.tamagotchi.utils.AlarmUtils;
 import ru.levspb666.tamagotchi.utils.PetUtils;
@@ -567,6 +568,10 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             }
             @Override
             public void onAnimationEnd(Animation animation) {
+                db.historyDao().insert(new History(
+                        Calendar.getInstance().getTimeInMillis(),
+                        ActionType.CURE.toString(),
+                        SELECTED_PET.getId()));
                 SELECTED_PET.setIll(false);
                 PetUtils.addExperience(11, MainActivity.this);
                 db.petDao().update(SELECTED_PET);
@@ -620,6 +625,10 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                         handler.sendEmptyMessage(0);
                         notificationCancel(getApplicationContext(), ActionType.EAT, SELECTED_PET);
                         AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+                        db.historyDao().insert(new History(
+                                Calendar.getInstance().getTimeInMillis(),
+                                ActionType.EAT.toString(),
+                                SELECTED_PET.getId()));
                     } else {
                         Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +
                                 getString(R.string.not_hunger), Toast.LENGTH_SHORT);
@@ -665,6 +674,10 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
                         AlarmUtils.setAlarm(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
                         notificationCancel(getApplicationContext(), ActionType.SLEEP, SELECTED_PET);
                         AlarmUtils.cancelAlarmIllWithCheck(getApplicationContext(), SELECTED_PET);
+                        db.historyDao().insert(new History(
+                                Calendar.getInstance().getTimeInMillis(),
+                                ActionType.SLEEP.toString(),
+                                SELECTED_PET.getId()));
                         handler.sendEmptyMessage(0);
                     } else {
                         Toast toast = Toast.makeText(MainActivity.this, SELECTED_PET.getName() + " " +

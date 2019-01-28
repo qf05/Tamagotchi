@@ -29,6 +29,7 @@
             android:launchMode="singleTask" />
         <activity android:name=".DeletePetActivity" />
         <activity android:name=".NotificationSettingsActivity" />
+        <activity android:name=".HistoryActivity" />
 
         <receiver android:name=".utils.ActionReceiver" />
 

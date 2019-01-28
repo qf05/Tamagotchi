@@ -7,11 +7,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 
+import java.util.Calendar;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
+import ru.levspb666.tamagotchi.model.History;
 import ru.levspb666.tamagotchi.model.Pet;
 
 import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
@@ -21,10 +23,10 @@ import static ru.levspb666.tamagotchi.utils.PetUtils.ILL_TAKE_HP;
 import static ru.levspb666.tamagotchi.utils.PetUtils.TAKE_EAT;
 
 public class ActionReceiver extends BroadcastReceiver {
-
+    private DataBase db;
     @Override
     public void onReceive(final Context context, Intent intent) {
-        DataBase db = DataBase.getAppDatabase(context.getApplicationContext());
+        db = DataBase.getAppDatabase(context.getApplicationContext());
         Pet pet = db.petDao().findById(Integer.parseInt(Objects.requireNonNull(intent.getData()).getSchemeSpecificPart()));
         if (pet != null) {
             if (pet.isLive()) {
@@ -70,6 +72,10 @@ public class ActionReceiver extends BroadcastReceiver {
             setRepeatAlarm(context, ActionType.ILL, pet);
         }
         NotificationUtils.notification(context, pet, ActionType.SHIT);
+        db.historyDao().insert(new History(
+                Calendar.getInstance().getTimeInMillis(),
+                ActionType.SHIT.toString(),
+                pet.getId()));
     }
 
     private Pet ill(final Context context, Pet pet) {
@@ -85,10 +91,18 @@ public class ActionReceiver extends BroadcastReceiver {
                 pet.setLive(false);
                 NotificationUtils.notification(context, pet, ActionType.DIE);
                 cancelAllAlarm(context, pet);
+                db.historyDao().insert(new History(
+                        Calendar.getInstance().getTimeInMillis(),
+                        ActionType.DIE.toString(),
+                        pet.getId()));
             }
         } else {
             pet.setIll(true);
             NotificationUtils.notification(context, pet, ActionType.ILL);
+            db.historyDao().insert(new History(
+                    Calendar.getInstance().getTimeInMillis(),
+                    ActionType.ILL.toString(),
+                    pet.getId()));
         }
         return pet;
     }
@@ -136,6 +150,10 @@ public class ActionReceiver extends BroadcastReceiver {
         } else {
             pet.setHp(hp);
         }
+        db.historyDao().insert(new History(
+                Calendar.getInstance().getTimeInMillis(),
+                ActionType.WAKEUP.toString(),
+                pet.getId()));
         return pet;
     }
 
