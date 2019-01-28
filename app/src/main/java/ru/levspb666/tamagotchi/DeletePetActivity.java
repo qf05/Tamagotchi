@@ -25,6 +25,9 @@ import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -98,6 +101,12 @@ public class DeletePetActivity extends AppCompatActivity implements DeleteRVAdap
         adapter = new DeleteRVAdapter(this, pets);
         adapter.setClickListener(DeletePetActivity.this);
         rv.setAdapter(adapter);
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("sony-d6633-CB5A25TGZ3")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     private void sureDialog() {

@@ -21,6 +21,9 @@ import android.widget.ListView;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
+
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
@@ -109,6 +112,12 @@ public class NotificationSettingsActivity extends AppCompatActivity {
         timeSilenceListAdapter = new TimeSilenceListAdapter(this, listTimeSilence);
         listView.setAdapter(timeSilenceListAdapter);
         registerForContextMenu(listView);
+        AdView mAdView = findViewById(R.id.adView);
+        AdRequest adRequest = new AdRequest.Builder()
+                .addTestDevice("sony-d6633-CB5A25TGZ3")
+                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+                .build();
+        mAdView.loadAd(adRequest);
     }
 
     public void addSilence(View view) {

@@ -53,7 +53,6 @@ public class WalkActivity extends AppCompatActivity {
     private boolean complete;
     private int indent;
     private DataBase db;
-    private AdView mAdView;
 
 
     @Override
@@ -92,7 +91,7 @@ public class WalkActivity extends AppCompatActivity {
         }
         petView.setOnClickListener(onClickListener);
         db = DataBase.getAppDatabase(getApplicationContext());
-        mAdView = findViewById(R.id.adView);
+        AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
                 .addTestDevice("sony-d6633-CB5A25TGZ3")
                 .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)

@@ -46,6 +46,5 @@
         android:layout_toEndOf="@+id/toHomeFromWalk"
         android:layout_alignParentBottom="true"
         ads:adSize="BANNER"
-        ads:adUnitId="@string/banner_ad_unit_id">
-    </com.google.android.gms.ads.AdView>
+        ads:adUnitId="@string/banner_ad_unit_id"/>
 </RelativeLayout>
