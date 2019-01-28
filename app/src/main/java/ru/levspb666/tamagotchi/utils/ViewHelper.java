@@ -165,7 +165,7 @@ public class ViewHelper {
             });
             switch (action){
                 case CREATE:
-                    soundPool.load(context, R.raw.birth, 1);
+                    soundPool.load(context, R.raw.birth, 2);
                     break;
                 case EAT:
                     soundPool.load(context, R.raw.nyam, 1);
@@ -180,7 +180,7 @@ public class ViewHelper {
                     soundPool.load(context, R.raw.sleep, 2);
                     break;
                 case LVLUP:
-                    soundPool.load(context, R.raw.lvl_up, 1);
+                    soundPool.load(context, R.raw.lvl_up, 2);
                     break;
                 case SHIT:
                     soundPool.load(context, R.raw.shit, 1);

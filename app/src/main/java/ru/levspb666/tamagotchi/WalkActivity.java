@@ -235,7 +235,7 @@ public class WalkActivity extends AppCompatActivity {
 
     public void goHome(View view) {
         home.setClickable(false);
-        ViewHelper.playClick(WalkActivity.this, ActionType.DIE);
+        ViewHelper.playClick(WalkActivity.this, ActionType.WALK);
         Animation animation = AnimationUtils.loadAnimation(WalkActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
             @Override
