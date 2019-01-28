@@ -10,13 +10,16 @@ import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.os.Build;
-import android.provider.Settings;
 import android.support.v4.app.NotificationCompat;
 import android.support.v4.app.NotificationManagerCompat;
 
+import java.util.Calendar;
+import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
+import ru.levspb666.tamagotchi.NotificationSettingsActivity;
 import ru.levspb666.tamagotchi.R;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.model.Pet;
@@ -66,7 +69,7 @@ public class NotificationUtils {
 
                 builder.setAutoCancel(true)
                         .setDefaults(Notification.DEFAULT_ALL)
-                        .setWhen(System.currentTimeMillis())
+                        .setWhen(checkSilenceTime(context))
                         .setSmallIcon(R.drawable.small_icon)
                         .setLargeIcon(BitmapFactory.decodeResource(context.getResources(), R.drawable.big_icon))
                         .setContentTitle(pet.getName())
@@ -117,5 +120,116 @@ public class NotificationUtils {
     public static void notificationCancel(Context context, ActionType action, Pet pet) {
         NotificationManagerCompat notificationManager = NotificationManagerCompat.from(context);
         notificationManager.cancel(action.toString(), (int) pet.getId());
+    }
+
+    private static long checkSilenceTime(Context context) {
+        List<Map<String, Integer>> listTime = NotificationSettingsActivity.fileRead(context);
+        Calendar calendar = Calendar.getInstance();
+        if (listTime != null && listTime.size() > 0) {
+            int sth;
+            int stm;
+            int sph;
+            int spm;
+            for (int i = 0; i < listTime.size(); i++) {
+                Map<String, Integer> map = listTime.get(i);
+                sth = map.get("startH");
+                stm = map.get("startM");
+                sph = map.get("stopH");
+                spm = map.get("stopM");
+                if (sth == sph && stm == spm) {
+                    return calendar.getTimeInMillis();
+                } else {
+                    if (sth < sph) {
+                        if (calendar.get(Calendar.HOUR) >= sth && calendar.get(Calendar.HOUR) <= sph) {
+                            if (calendar.get(Calendar.HOUR) == sph) {
+                                if (calendar.get(Calendar.MINUTE) < spm) {
+                                    return lay(sph, spm);
+                                } else {
+                                    return calendar.getTimeInMillis();
+                                }
+                            } else {
+                                if (calendar.get(Calendar.HOUR) == sth) {
+                                    if (calendar.get(Calendar.MINUTE) >= stm) {
+                                        return lay(sph, spm);
+                                    } else {
+                                        return calendar.getTimeInMillis();
+                                    }
+                                } else {
+                                    return lay(sph, spm);
+                                }
+                            }
+                        }
+                    } else {
+                        if (sth == sph && calendar.get(Calendar.HOUR) == sth) {
+                            if (stm > spm) {
+                                if (calendar.get(Calendar.MINUTE) >= stm) {
+                                    return layToNextDay(sph, spm);
+                                } else {
+                                    if (calendar.get(Calendar.MINUTE) < spm) {
+                                        return lay(sph, spm);
+                                    } else {
+                                        return calendar.getTimeInMillis();
+                                    }
+                                }
+                            } else {
+                                if (calendar.get(Calendar.MINUTE) > stm && calendar.get(Calendar.MINUTE) < spm) {
+                                    return lay(sph, spm);
+                                } else {
+                                    return calendar.getTimeInMillis();
+                                }
+                            }
+                        } else {
+                            if (calendar.get(Calendar.HOUR) <= sph || calendar.get(Calendar.HOUR) >= sth) {
+                                if (calendar.get(Calendar.HOUR) == sth) {
+                                    if (calendar.get(Calendar.MINUTE) >= stm) {
+                                        return layToNextDay(sph, spm);
+                                    } else {
+                                        return calendar.getTimeInMillis();
+                                    }
+                                } else {
+                                    if (calendar.get(Calendar.HOUR) == sph) {
+                                        if (calendar.get(Calendar.MINUTE) < spm) {
+                                            return lay(sph, spm);
+                                        } else {
+                                            return calendar.getTimeInMillis();
+                                        }
+                                    } else {
+                                        if (calendar.get(Calendar.HOUR) <= 23 && calendar.get(Calendar.HOUR) > sth) {
+                                            return layToNextDay(sph, spm);
+                                        } else {
+                                            return lay(sph, spm);
+                                        }
+                                    }
+                                }
+                            } else {
+                                return calendar.getTimeInMillis();
+                            }
+                        }
+                    }
+                }
+            }
+        }
+        return calendar.getTimeInMillis();
+    }
+
+    private static long lay(int h, int m) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.get(Calendar.YEAR);
+        calendar.set(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                h, m);
+        return calendar.getTimeInMillis();
+    }
+
+    private static long layToNextDay(int h, int m) {
+        Calendar calendar = Calendar.getInstance();
+        calendar.get(Calendar.YEAR);
+        calendar.set(calendar.get(Calendar.YEAR),
+                calendar.get(Calendar.MONTH),
+                calendar.get(Calendar.DAY_OF_MONTH),
+                h, m);
+        calendar.add(Calendar.DAY_OF_YEAR, 1);
+        return calendar.getTimeInMillis();
     }
 }
