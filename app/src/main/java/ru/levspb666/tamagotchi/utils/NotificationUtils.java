@@ -77,36 +77,36 @@ public class NotificationUtils {
 
                 switch (action) {
                     case EAT:
-                        builder.setContentText(" проголодался!")
-                                .setTicker(pet.getName() + " проголодался!");
+                        builder.setContentText(" " + context.getString(R.string.need_eat))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.need_eat));
                         break;
                     case WALK:
-                        builder.setContentText(" хочет гулять!")
-                                .setTicker(pet.getName() + " хочет гулять!");
+                        builder.setContentText(" " + context.getString(R.string.need_walk))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.need_walk));
                         break;
                     case ILL:
-                        builder.setContentText(" заболел!")
-                                .setTicker(pet.getName() + " заболел!");
+                        builder.setContentText(" " + context.getString(R.string.is_ill))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.is_ill));
                         break;
                     case SLEEP:
-                        builder.setContentText(" хочет спать!")
-                                .setTicker(pet.getName() + " хочет спать!");
+                        builder.setContentText(" " + context.getString(R.string.need_sleep))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.need_sleep));
                         break;
                     case WAKEUP:
-                        builder.setContentText(" проснулся")
-                                .setTicker(pet.getName() + " проснулся");
+                        builder.setContentText(" " + context.getString(R.string.is_wake_up))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.is_wake_up));
                         break;
                     case SHIT:
-                        builder.setContentText(" покакал!")
-                                .setTicker(pet.getName() + " покакал!");
+                        builder.setContentText(" " + context.getString(R.string.is_shit))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.is_shit));
                         break;
                     case CURE:
-                        builder.setContentText(" может умереть!")
-                                .setTicker(pet.getName() + " может умереть!");
+                        builder.setContentText(" " + context.getString(R.string.may_die))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.may_die));
                         break;
                     case DIE:
-                        builder.setContentText(" умер! ;(")
-                                .setTicker(pet.getName() + " умер!");
+                        builder.setContentText(" " + context.getString(R.string.is_die))
+                                .setTicker(pet.getName() + " " + context.getString(R.string.is_die));
                         break;
                 }
 

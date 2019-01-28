@@ -1,0 +1,76 @@
+<resources>
+    <string name="app_name">Тамагочи</string>
+    <string name="pets">Питомцы</string>
+    <string name="notification">Уведомления</string>
+    <string name="history">История</string>
+    <string name="sound">Звук</string>
+    <string name="create_new_pet">Создать питомца</string>
+    <string name="change_pet">Сменить питомца</string>
+    <string name="change_name">Переименовать питомца</string>
+    <string name="delete_pet">Удаление питомцев</string>
+    <string name="ok">ОК</string>
+    <string name="cancel">Отмена</string>
+    <string name="name">Name</string>
+    <string name="pets_input">Выберите питомца: </string>
+    <string name="create_pet">Создание питомца </string>
+    <string name="input_name">Введите имя: </string>
+    <string name="sort_on">Сортировка по </string>
+    <string name="this_name">Текущее имя: </string>
+    <string name="input_new_name">Введите новое имя:</string>
+    <string name="change_name_pet">Смена имени питомца</string>
+    <string name="delete_this_pets">Вы действительно хотите удалить выбранных питомцев?</string>
+    <string name="delete">Удалить</string>
+    <string name="not_hunger"> не голоден!</string>
+    <string name="lvl">lvl</string>
+    <string name="not_eat_if_sleep">не может есть пока спит!</string>
+    <string name="is_sleep">уже спит!</string>
+    <string name="not_sleep_if_ill">не может спать пока болеет!</string>
+    <string name="not_walk_if_sleep">не может гулять пока спит!</string>
+    <string name="silence_mode">Режимы тишины</string>
+    <string name="start">Начало</string>
+    <string name="end">Конец</string>
+    <string name="start_silence">Время начала тишины</string>
+    <string name="stop_silence">Время окончания тишины</string>
+    <string name="change">Изменить</string>
+    <string name="if_pet_wake_up">Уведомления что питомец проснулся</string>
+    <string name="not_notification">Отключить все уведомления</string>
+
+    <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
+    <string name="error_loading">Ошибка загрузки видео</string>
+
+    <string name="born">родился</string>
+    <string name="eat">поел</string>
+    <string name="walk">погулял</string>
+    <string name="ill">заболел</string>
+    <string name="cure">вылечился</string>
+    <string name="sleep">уснул</string>
+    <string name="wake_up">проснулся</string>
+    <string name="lvl_up">LVL UP</string>
+    <string name="shit">покакал</string>
+    <string name="die">умер</string>
+    <string name="need_eat">проголодался!</string>
+    <string name="need_walk">хочет гулять!</string>
+    <string name="is_ill">заболел!</string>
+    <string name="need_sleep">хочет спать!</string>
+    <string name="is_wake_up">проснулся</string>
+    <string name="is_shit">покакал!</string>
+    <string name="may_die">может умереть!</string>
+    <string name="is_die">умер! ;(</string>
+
+    <string-array name="pets">
+        <item>Кошка</item>
+        <item>Собака</item>
+        <item>Ктулху</item>
+    </string-array>
+
+    <string-array name="sort">
+        <item>имени</item>
+        <item>уровню</item>
+    </string-array>
+
+    <string-array name="grouping">
+        <item>дате</item>
+        <item>питомцам</item>
+        <item>событиям</item>
+    </string-array>
+</resources>

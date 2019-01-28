@@ -1,73 +1,76 @@
 <resources>
     <string name="app_name">Tamagotchi</string>
-    <string name="hello">Hello World!</string>
-    <string name="cat">CAT</string>
-    <string name="dog">DOG</string>
-    <string name="cthulhu">Cthulhu</string>
-    <string name="pets">Питомцы</string>
-    <string name="notification">Уведомления</string>
-    <string name="history">История</string>
-    <string name="sound">Звук</string>
-    <string name="create_new_pet">Создать питомца</string>
-    <string name="change_pet">Сменить питомца</string>
-    <string name="change_name">Переименовать питомца</string>
-    <string name="delete_pet">Удаление питомцев</string>
-    <string name="ok">ОК</string>
-    <string name="cancel">Отмена</string>
+    <string name="pets">Pets</string>
+    <string name="notification">Notification</string>
+    <string name="history">History</string>
+    <string name="sound">Sound</string>
+    <string name="create_new_pet">Create pet</string>
+    <string name="change_pet">Change pet</string>
+    <string name="change_name">Rename pet</string>
+    <string name="delete_pet">Delete pets</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Cancel</string>
     <string name="name">Name</string>
-    <string name="pets_input">Выберите питомца: </string>
-    <string name="create_pet">Создание питомца </string>
-    <string name="input_name">Введите имя: </string>
-    <string name="sort_on">Сортировка по </string>
-    <string name="this_name">Текущее имя: </string>
-    <string name="input_new_name">Введите новое имя:</string>
-    <string name="change_name_pet">Смена имени питомца</string>
-    <string name="delete_this_pets">Вы действительно хотите удалить выбранных питомцев?</string>
-    <string name="delete">Удалить</string>
-    <string name="not_hunger"> не голоден!</string>
+    <string name="pets_input">Choose the pet: </string>
+    <string name="create_pet">Create pet </string>
+    <string name="input_name">Input name: </string>
+    <string name="sort_on">Sorting on </string>
+    <string name="this_name">Current name: </string>
+    <string name="input_new_name">Enter a new name:</string>
+    <string name="change_name_pet">Change name of the pet</string>
+    <string name="delete_this_pets">You really want to remove the chosen pets?</string>
+    <string name="delete">Delete</string>
+    <string name="not_hunger"> is not hungry!</string>
     <string name="lvl">lvl</string>
-    <string name="not_eat_if_sleep">не может есть пока спит!</string>
-    <string name="is_sleep">уже спит!</string>
-    <string name="not_sleep_if_ill">не может спать пока болеет!</string>
-    <string name="not_walk_if_sleep">не может гулять пока спит!</string>
-    <string name="notification_settings">уведомления</string>
-    <string name="silence_mode">Режимы тишины</string>
-    <string name="start">Начало</string>
-    <string name="end">Конец</string>
-    <string name="start_silence">Время начала тишины</string>
-    <string name="stop_silence">Время окончания тишины</string>
-    <string name="change">Изменить</string>
-    <string name="if_pet_wake_up">Уведомления что питомец проснулся</string>
-    <string name="not_notification">Отключить все уведомления</string>
+    <string name="not_eat_if_sleep">cannot eat so far sleeps!</string>
+    <string name="is_sleep">already sleeps!</string>
+    <string name="not_sleep_if_ill">cannot sleep so far is ill!</string>
+    <string name="not_walk_if_sleep">cannot walk so far sleeps!</string>
+    <string name="silence_mode">Silence modes</string>
+    <string name="start">Start</string>
+    <string name="end">End</string>
+    <string name="start_silence">Beginning of silence</string>
+    <string name="stop_silence">End of silence</string>
+    <string name="change">Change</string>
+    <string name="if_pet_wake_up">Notification that the pet wake up</string>
+    <string name="not_notification">Cancel all notification</string>
 
     <string name="banner_ad_unit_id">ca-app-pub-3940256099942544/6300978111</string>
-    <string name="error_loading">Ошибка загрузки видео</string>
+    <string name="error_loading">Error of loading of video</string>
 
-    <string name="born">родился</string>
-    <string name="eat">поел</string>
-    <string name="walk">погулял</string>
-    <string name="ill">заболел</string>
-    <string name="cure">вылечился</string>
-    <string name="sleep">уснул</string>
-    <string name="wake_up">проснулся</string>
+    <string name="born">born</string>
+    <string name="eat">eat</string>
+    <string name="walk">walk</string>
+    <string name="ill">ill</string>
+    <string name="cure">cure</string>
+    <string name="sleep">sleep</string>
+    <string name="wake_up">wake up</string>
     <string name="lvl_up">LVL UP</string>
-    <string name="shit">покакал</string>
-    <string name="die">умер</string>
+    <string name="shit">is shit</string>
+    <string name="die">die</string>
+    <string name="need_eat">is hungry!</string>
+    <string name="need_walk">wants to walk!</string>
+    <string name="is_ill">is ill!</string>
+    <string name="need_sleep">wants to sleep!</string>
+    <string name="is_wake_up">wake up</string>
+    <string name="is_shit">is shit!</string>
+    <string name="may_die">can die!</string>
+    <string name="is_die">die! ;(</string>
 
     <string-array name="pets">
-        <item>Кошка</item>
-        <item>Собака</item>
-        <item>Ктулху</item>
+        <item>Cat</item>
+        <item>Dog</item>
+        <item>Cthulhu</item>
     </string-array>
 
     <string-array name="sort">
-        <item>имени</item>
-        <item>уровню</item>
+        <item>name</item>
+        <item>lvl</item>
     </string-array>
 
     <string-array name="grouping">
-        <item>дате</item>
-        <item>питомцам</item>
-        <item>событиям</item>
+        <item>date</item>
+        <item>pets</item>
+        <item>actions</item>
     </string-array>
 </resources>
