@@ -18,17 +18,17 @@ import static android.app.PendingIntent.FLAG_UPDATE_CURRENT;
 
 public class AlarmUtils {
 
-    private static final int SHIT_TIME_ADD = 1;
-    private static final int SHIT_RANDOM_TIME = 1;
-    private static final int ILL_TIME_ADD = 1;
-    private static final int ILL_TIME_REPEAT = 1;
-    private static final int EAT_TIME = 1;
-    private static final int WALK_TIME_ADD = 1;
-    private static final int WALK_RANDOM_TIME = 1;
-    private static final int SLEEP_TIME_ADD = 1;
-    private static final int SLEEP_RANDOM_TIME = 1;
-    private static final int WAKE_UP_TIME_ADD = 1;
-    private static final int WAKE_UP_RANDOM_TIME = 1;
+    private static final int SHIT_TIME_ADD = 60*4;
+    private static final int SHIT_RANDOM_TIME = 60*7;
+    private static final int ILL_TIME_ADD = 60*9;
+    private static final int ILL_TIME_REPEAT = 60/2;
+    private static final int EAT_TIME = 60/2;
+    private static final int WALK_TIME_ADD = 60*5;
+    private static final int WALK_RANDOM_TIME = 60*8;
+    private static final int SLEEP_TIME_ADD = 60*6;
+    private static final int SLEEP_RANDOM_TIME = 60*8;
+    private static final int WAKE_UP_TIME_ADD = 60;
+    private static final int WAKE_UP_RANDOM_TIME = 60*5;
 
     public static long nextShit() {
         Calendar calendar = Calendar.getInstance();

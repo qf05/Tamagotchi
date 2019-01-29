@@ -95,8 +95,8 @@ public class WalkActivity extends AppCompatActivity {
         db = DataBase.getAppDatabase(getApplicationContext());
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
-                .addTestDevice("sony-d6633-CB5A25TGZ3")
-                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
+//                .addTestDevice("sony-d6633-CB5A25TGZ3")
+//                .addTestDevice(AdRequest.DEVICE_ID_EMULATOR)
                 .build();
         mAdView.loadAd(adRequest);
         getSize();

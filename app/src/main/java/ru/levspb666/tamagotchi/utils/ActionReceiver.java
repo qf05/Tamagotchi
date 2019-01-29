@@ -144,7 +144,7 @@ public class ActionReceiver extends BroadcastReceiver {
         pet.setSlip(false);
         NotificationUtils.notification(context, pet, ActionType.WAKEUP);
         AlarmUtils.checkAllAlarmPet(context, pet);
-        int hp = pet.getHp() + 5;
+        int hp = pet.getHp() + 7;
         if (hp >= 100) {
             pet.setHp(100);
         } else {
