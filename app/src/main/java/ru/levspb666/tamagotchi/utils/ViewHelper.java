@@ -5,6 +5,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.media.AudioAttributes;
 import android.media.SoundPool;
@@ -18,15 +19,19 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import java.util.Calendar;
+import java.util.List;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.MainActivity;
 import ru.levspb666.tamagotchi.R;
 import ru.levspb666.tamagotchi.SettingsActivity;
+import ru.levspb666.tamagotchi.WalkActivity;
 import ru.levspb666.tamagotchi.db.DataBase;
 import ru.levspb666.tamagotchi.enums.ActionType;
 import ru.levspb666.tamagotchi.enums.PetsType;
@@ -92,14 +97,14 @@ public class ViewHelper {
                     PetsType petsType = petsTypes[spinnerCreate.getSelectedItemPosition()];
                     Log.i("SELECTED_PET", petsType.toString() + "   " + name);
                     long id = db.petDao().insert(new Pet(name, petsType));
+                    SELECTED_PET = db.petDao().findById(id);
                     PETS = db.petDao().getAll();
-                    MainActivity.SELECTED_PET = db.petDao().findById(id);
 
-                    AlarmUtils.checkAllAlarm(context.getApplicationContext(), PETS);
                     SharedPreferences settings = context.getSharedPreferences(APP_PREFERENCES, Context.MODE_PRIVATE);
                     SharedPreferences.Editor editor = settings.edit();
                     editor.putLong(PREFERENCES_SELECTED_PET, id);
                     editor.apply();
+                    AlarmUtils.checkAllAlarm(context.getApplicationContext(), PETS);
                     db.historyDao().insert(new History(
                             Calendar.getInstance().getTimeInMillis(),
                             ActionType.CREATE.toString(),
@@ -107,6 +112,8 @@ public class ViewHelper {
                     if (activity.getLocalClassName().equalsIgnoreCase("MainActivity")) {
                         MainActivity.handler.sendEmptyMessage(0);
                     }else {
+                        Intent intent = new Intent(context, MainActivity.class);
+                        activity.startActivity(intent);
                         activity.finish();
                     }
                     dialog.cancel();
@@ -149,44 +156,82 @@ public class ViewHelper {
         indicator.clearAnimation();
     }
 
-    public static void playClick(Context context, ActionType action){
-        if (!SOUND_OFF) {
-            context = context.getApplicationContext();
-            AudioAttributes attributes = new AudioAttributes.Builder()
-                    .setUsage(AudioAttributes.USAGE_GAME)
-                    .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
-                    .build();
-            SoundPool soundPool = new SoundPool.Builder().setAudioAttributes(attributes).build();
-            soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
-                @Override
-                public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
-                    soundPool.play(sampleId, 1f, 1f, 1, 0, 1f);
-                }
-            });
-            switch (action){
-                case CREATE:
-                    soundPool.load(context, R.raw.birth, 2);
-                    break;
-                case EAT:
-                    soundPool.load(context, R.raw.nyam, 1);
-                    break;
-                case WALK:
-                    soundPool.load(context, R.raw.door, 1);
-                    break;
-                case CURE:
-                    soundPool.load(context, R.raw.cure, 1);
-                    break;
-                case SLEEP:
-                    soundPool.load(context, R.raw.sleep, 2);
-                    break;
-                case LVLUP:
-                    soundPool.load(context, R.raw.lvl_up, 2);
-                    break;
-                case SHIT:
-                    soundPool.load(context, R.raw.shit, 1);
-                    break;
-                default: soundPool.load(context, R.raw.click, 1);
+    public static class SoundHelper{
+        private static SoundPool soundPool;
+
+        public static SoundPool getSoundPool(){
+            if (soundPool!=null){
+                return soundPool;
+            }else {
+                AudioAttributes attributes = new AudioAttributes.Builder()
+                        .setUsage(AudioAttributes.USAGE_GAME)
+                        .setContentType(AudioAttributes.CONTENT_TYPE_UNKNOWN)
+                        .build();
+                soundPool = new SoundPool.Builder()
+                        .setMaxStreams(20)
+                        .setAudioAttributes(attributes)
+                        .build();
+                soundPool.setOnLoadCompleteListener(new SoundPool.OnLoadCompleteListener() {
+                    @Override
+                    public void onLoadComplete(SoundPool soundPool, int sampleId, int status) {
+                        soundPool.play(sampleId, 1f, 1f, 2, 0, 1f);
+                    }
+                });
+                return soundPool;
             }
+        }
+    }
+
+    public static void playClick(final Context activityContext, final ActionType action){
+        if (!SOUND_OFF) {
+            try {
+//                new Thread() {
+//                    public void run() {
+                Context context = activityContext.getApplicationContext();
+                SoundPool soundPool = SoundHelper.getSoundPool();
+                switch (action) {
+                    case CREATE:
+                        soundPool.load(context, R.raw.birth, 2);
+                        break;
+                    case EAT:
+                        soundPool.load(context, R.raw.nyam, 2);
+                        break;
+                    case WALK:
+                        soundPool.load(context, R.raw.door, 2);
+                        break;
+                    case CURE:
+                        soundPool.load(context, R.raw.cure, 2);
+                        break;
+                    case SLEEP:
+                        soundPool.load(context, R.raw.sleep, 2);
+                        break;
+                    case LVLUP:
+                        soundPool.load(context, R.raw.lvl_up, 2);
+                        break;
+                    case SHIT:
+                        soundPool.load(context, R.raw.shit, 2);
+                        break;
+                    default:
+                        soundPool.load(context, R.raw.click, 2);
+                }
+
+//                    }
+//                }.start();
+            }catch (Exception e){
+                Toast.makeText(activityContext.getApplicationContext(), e.getMessage(), Toast.LENGTH_LONG).show();
+            }
+        }
+    }
+
+    public static void clicableFalse(List<View> viewList){
+        for (View view:viewList){
+            view.setClickable(false);
+        }
+    }
+
+    public static void clicableTrue(List<View> viewList){
+        for (View view:viewList){
+            view.setClickable(true);
         }
     }
 }

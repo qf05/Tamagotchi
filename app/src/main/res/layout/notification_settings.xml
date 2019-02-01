@@ -103,23 +103,27 @@
 
     <com.google.android.gms.ads.AdView
         android:id="@+id/adView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_alignParentBottom="true"
-        android:layout_toStartOf="@+id/add"
-        android:layout_toEndOf="@+id/backFromNotification"
-        android:layout_marginEnd="10dp"
-        android:layout_marginStart="10dp"
         ads:adSize="BANNER"
         ads:adUnitId="@string/banner_ad_unit_id"/>
+
+<TextView
+    android:id="@+id/qwe"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_centerHorizontal="true"
+    android:layout_alignParentBottom="true"
+    android:text="wdefregtegt"/>
 
     <Button
         android:id="@+id/add"
         android:layout_width="50dp"
         android:layout_height="50dp"
         android:layout_marginEnd="1dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/adView"
         android:layout_alignParentEnd="true"
         android:layout_marginBottom="1dp"
         android:onClick="addSilence"
@@ -130,7 +134,7 @@
         android:id="@+id/backFromNotification"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
+        android:layout_above="@+id/adView"
         android:onClick="goBack"
         android:layout_marginBottom="1dp"
         android:layout_marginStart="1dp"

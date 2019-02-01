@@ -20,6 +20,8 @@ import android.widget.TextView;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.AdView;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
 import ru.levspb666.tamagotchi.db.DataBase;
@@ -46,6 +48,7 @@ public class SettingsActivity extends AppCompatActivity {
     private Button notification;
     private Button history;
     private Button home;
+    private List<View> viewList;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +66,14 @@ public class SettingsActivity extends AppCompatActivity {
         notification = findViewById(R.id.notification);
         history = findViewById(R.id.history);
         home = findViewById(R.id.homeFromSettings);
+        viewList = new ArrayList<>();
+        viewList.add(sound);
+        viewList.add(create);
+        viewList.add(rename);
+        viewList.add(delete);
+        viewList.add(notification);
+        viewList.add(history);
+        viewList.add(home);
         AdView mAdView = findViewById(R.id.adView);
         AdRequest adRequest = new AdRequest.Builder()
 //                .addTestDevice("sony-d6633-CB5A25TGZ3")
@@ -72,7 +83,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void createPet(View view) {
-        create.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -82,7 +93,7 @@ public class SettingsActivity extends AppCompatActivity {
 
             @Override
             public void onAnimationEnd(Animation animation) {
-                create.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
                 ViewHelper.createDialog(SettingsActivity.this, SettingsActivity.this);
             }
 
@@ -103,7 +114,7 @@ public class SettingsActivity extends AppCompatActivity {
     };
 
     public void deletePet(View view) {
-        delete.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -115,7 +126,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 Intent intent = new Intent(SettingsActivity.this, DeletePetActivity.class);
                 startActivity(intent);
-                delete.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
             }
 
             @Override
@@ -127,7 +138,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void changeNamePet(View view) {
-        delete.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -151,7 +162,7 @@ public class SettingsActivity extends AppCompatActivity {
                 dialog = builder.create();
                 ViewHelper.fonForDialog(dialog, (ImageView) layout.findViewById(R.id.fon_change_name_dialog));
                 dialog.show();
-                rename.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
             }
 
             @Override
@@ -177,7 +188,7 @@ public class SettingsActivity extends AppCompatActivity {
     };
 
     public void goHome(View view) {
-        home.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -189,7 +200,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 Intent intent = new Intent(SettingsActivity.this, MainActivity.class);
                 startActivity(intent);
-                home.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
                 finish();
             }
 
@@ -202,7 +213,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void notification(View view) {
-        notification.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -214,7 +225,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 Intent intent = new Intent(SettingsActivity.this, NotificationSettingsActivity.class);
                 startActivity(intent);
-                notification.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
             }
 
             @Override
@@ -226,7 +237,7 @@ public class SettingsActivity extends AppCompatActivity {
     }
 
     public void history(View view) {
-        history.setClickable(false);
+        ViewHelper.clicableFalse(viewList);
         ViewHelper.playClick(SettingsActivity.this, ActionType.DIE);
         Animation animation = AnimationUtils.loadAnimation(SettingsActivity.this, R.anim.click);
         animation.setAnimationListener(new Animation.AnimationListener() {
@@ -238,7 +249,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onAnimationEnd(Animation animation) {
                 Intent intent = new Intent(SettingsActivity.this, HistoryActivity.class);
                 startActivity(intent);
-                history.setClickable(true);
+                ViewHelper.clicableTrue(viewList);
             }
 
             @Override
@@ -257,6 +268,5 @@ public class SettingsActivity extends AppCompatActivity {
         SharedPreferences.Editor editor = settings.edit();
         editor.putBoolean(PREFERENCES_SOUND_OFF, SOUND_OFF);
         editor.apply();
-        sound.setClickable(true);
     }
 }

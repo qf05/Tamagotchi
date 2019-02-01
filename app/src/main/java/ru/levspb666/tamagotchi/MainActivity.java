@@ -152,13 +152,13 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
         mRewardedVideoAd.setRewardedVideoAdListener(this);
         bonusLoadIndicator = findViewById(R.id.bonusLoadIndicator);
         bonusLoadIndicator.setVisibility(View.INVISIBLE);
-        checkPet();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
         handler = new MyHandler(this);
+        MainActivity.handler.sendEmptyMessage(0);
     }
 
     private void checkPet() {
@@ -801,10 +801,8 @@ public class MainActivity extends AppCompatActivity implements RewardedVideoAdLi
             super.handleMessage(msg);
             MainActivity activity = wrActivity.get();
             if (activity != null) {
-                if (SELECTED_PET != null) {
-                    SELECTED_PET = db.petDao().findById(SELECTED_PET.getId());
-                }
-                activity.setViewPet();
+
+                activity.checkPet();
             }
         }
     }
